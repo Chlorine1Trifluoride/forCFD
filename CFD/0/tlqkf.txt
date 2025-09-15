@@ -1,0 +1,9 @@
+dimensions	[];
+internalField	uniform;
+{
+	patch
+	{
+		type ;
+		value ;
+	}
+}

@@ -1,0 +1,34 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      controlDict;
+}
+
+application simpleFoam;
+startFrom startTime;
+startTime 0;
+endTime 1;
+deltaT 1;
+writeControl timestep;
+writeInterval 1;
+purgeWrite 0;
+writeFormat ascii;
+writePrecision 6;
+writeCompression off;
+runtimeModifiable yes;
+functions
+{
+    Lift
+    {
+        type forces;
+        functionObjectLibs ("Libforces.so");
+        patches ("human");
+        rho rhoInf;
+        rhoInf 1.225;
+        CofR (0 0 0);
+        outputControl timeStep;
+        outputInterval 1;
+    }
+}
