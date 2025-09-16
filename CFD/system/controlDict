@@ -1,36 +1,36 @@
 FoamFile
 {
-    version     2.0;
-    format      ascii;
-    class       dictionary;
-    object      controlDict;
+    version                 2.0;
+    format                  ascii;
+    class                   dictionary;
+    object                  controlDict;
 }
 
-application simpleFoam;
-startFrom startTime;
-startTime 0;
-endTime 1;
-deltaT 1;
-writeControl timeStep;
-writeInterval 1;
-purgeWrite 0;
-writeFormat ascii;
-writePrecision 6;
-writeCompression off;
-runtimeModifiable yes;
+application                 simpleFoam;
+startFrom                   startTime;
+startTime                   0;
+endTime                     1;
+deltaT                      1;
+writeControl                timeStep;
+writeInterval               1;
+purgeWrite                  0;
+writeFormat                 ascii;
+writePrecision              6;
+writeCompression            off;
+runtimeModifiable           yes;
 functions
 {
     Forces
     {
-        type forces;
-        functionObjectLibs ("Libforces.so");
-        patches ("human");
-        rho rhoInf;
-        rhoInf 1.225;
-        LiftDir (0 0 1);
-        DragDir (0 -1 0);
-        CofR (0 0 0.2);
-        outputControl timeStep;
-        outputInterval 1;
+        type                forces;
+        functionObjectLibs  ("Libforces.so");
+        patches             ("human");
+        rho                 rhoInf;
+        rhoInf              1.225;
+        LiftDir             (0 0 1);
+        DragDir             (0 -1 0);
+        CofR                (0 0 0.2);
+        outputControl       timeStep;
+        outputInterval      1;
     }
 }

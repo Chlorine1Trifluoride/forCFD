@@ -6,22 +6,10 @@ FoamFile
     object      surfaceFeaturesDict;
 }
 
-surface
+surfaces
 (
-    "workspaces/forCFD/CFD/constant/trifurface/HumanHQ0deg.stl"
+    "HumanHQ0deg.stl"
 );
-extractFromSurface
-{
-    extractionMethod    extractFromSurface;
-    includedAngle       150;
-    writeObj            yes;
-}
 
-geometry
-{
-    HumanHQ0deg.stl
-    {
-        type triSurfaceMesh;
-        name human;
-    }
-}
+includedAngle 150;
+writeObj      yes;

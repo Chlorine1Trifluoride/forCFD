@@ -1,62 +1,67 @@
 FoamFile
 {
-    version     2.0;
-    format      ascii;
-    class       dictionary;
-    object      snappyHexMeshDict;
+    version                     2.0;
+    format                      ascii;
+    class                       dictionary;
+    object                      snappyHexMeshDict;
 }
 
-mergeTolerance 1e-6;
-castellatedMesh true;
-snap            true;
-addLayers       false;
+mergeTolerance                  1e-6;
+castellatedMesh                 true;
+snap                            true;
+addLayers                       false;
 
 geometry
 {
     human
     {
-        type triSurfaceMesh;
-        file "HumanHQ0deg.stl";
+        type                    triSurfaceMesh;
+        file                    "HumanHQ0deg.stl";
     }
 }
 
 castellatedMeshControls
 {
-    maxLocalCells 1000000;
-    maxGlobalCells 2000000;
-    minRefinementCells 0;
+    maxLocalCells               1000000;
+    maxGlobalCells              2000000;
+    minRefinementCells          0;
 
-    locationInMesh (-2 -2 -2);  // STL 외부의 한 점
+    locationInMesh              (-2 -2 -2);
 
-    refinementSurfaces
-    {
-        human
-        {
-            level (2 3);
+    refinementSurfaces          
+    {   
+        human 
+        { 
+            level (2 3); 
+            patchInfo
+            {
+                type wall;
+                inGroups (humanGroup);
+            }
         }
     }
 
-    resolveFeatureAngle 150;
-    allowFreeStandingZoneFaces true;
+    resolveFeatureAngle         150;
+    allowFreeStandingZoneFaces  true;
 }
 
 snapControls
 {
-    nSmoothPatch 3;
-    tolerance 2.0;
-    nSolveIter 30;
-    nRelaxIter 5;
+    nSmoothPatch                3;
+    tolerance                   2.0;
+    nSolveIter                  30;
+    nRelaxIter                  5;
 }
 
 meshQualityControls
 {
-    maxNonOrtho 65;
-    maxBoundarySkewness 20;
-    maxInternalSkewness 4;
-    minVol 1e-13;
-    minTetQuality 1e-9;
-    minDeterminant 0.001;
-    minFaceWeight 0.02;
-    minVolRatio 0.01;
-    errorReduction 0.75;
+    maxNonOrtho                 65;
+    maxBoundarySkewness         20;
+    maxInternalSkewness         4;
+    minVol                      1e-13;
+    minTetQuality               1e-9;
+    minDeterminant              0.001;
+    minFaceWeight               0.02;
+    minVolRatio                 0.01;
+    errorReduction              0.75;
 }
