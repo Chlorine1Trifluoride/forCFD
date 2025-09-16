@@ -25,7 +25,7 @@ castellatedMeshControls
     maxGlobalCells 2000000;
     minRefinementCells 0;
 
-    locationInMesh (-1.5 0 0);  // STL 외부의 한 점
+    locationInMesh (-2 -2 -2);  // STL 외부의 한 점
 
     refinementSurfaces
     {
@@ -53,7 +53,7 @@ meshQualityControls
     maxBoundarySkewness 20;
     maxInternalSkewness 4;
     minVol 1e-13;
-    minTetQuality 1e-15;
+    minTetQuality 1e-9;
     minDeterminant 0.001;
     minFaceWeight 0.02;
     minVolRatio 0.01;
