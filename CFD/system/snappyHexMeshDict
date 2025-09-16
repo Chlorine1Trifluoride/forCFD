@@ -6,16 +6,17 @@ FoamFile
     object      snappyHexMeshDict;
 }
 
+mergeTolerance 1e-6;
 castellatedMesh true;
 snap            true;
 addLayers       false;
 
 geometry
 {
-    HumanHQ0deg.stl
+    human
     {
         type triSurfaceMesh;
-        name human;
+        file "HumanHQ0deg.stl";
     }
 }
 

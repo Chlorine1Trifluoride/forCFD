@@ -11,7 +11,7 @@ startFrom startTime;
 startTime 0;
 endTime 1;
 deltaT 1;
-writeControl timestep;
+writeControl timeStep;
 writeInterval 1;
 purgeWrite 0;
 writeFormat ascii;
