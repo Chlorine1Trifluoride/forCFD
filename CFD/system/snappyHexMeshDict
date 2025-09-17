@@ -26,7 +26,7 @@ castellatedMeshControls
     maxGlobalCells              2000000;
     minRefinementCells          0;
 
-    locationInMesh              (-2 -2 -2);
+    locationInMesh              (0 0 0);
 
     refinementSurfaces          
     {   
@@ -35,14 +35,14 @@ castellatedMeshControls
             level (2 3); 
             patchInfo
             {
-                type wall;
-                inGroups (humanGroup);
+                type            wall;
+                name            human;
             }
         }
     }
 
-    resolveFeatureAngle         150;
-    allowFreeStandingZoneFaces  true;
+    resolveFeatureAngle         0;
+    allowFreeStandingZoneFaces  false;
 }
 
 snapControls
