@@ -26,13 +26,15 @@ castellatedMeshControls
     maxGlobalCells              2000000;
     minRefinementCells          0;
 
+    nCellsBetweenLevels        3;
+
     locationInMesh              (0 0 0);
 
     refinementSurfaces          
     {   
         human 
         { 
-            level (2 3); 
+            level (1 2); 
             patchInfo
             {
                 type            wall;
@@ -64,4 +66,5 @@ meshQualityControls
     minFaceWeight               0.02;
     minVolRatio                 0.01;
     errorReduction              0.75;
+    maxConcave                  80;
 }

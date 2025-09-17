@@ -1,0 +1,27 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      createPatchDict;
+}
+
+patches
+(
+    {
+        name human; // 남길 patch 이름
+        patchInfo
+        {
+            type wall;
+        }
+        constructFrom patches;
+        patches
+        (
+            human_patch0000
+            human_patch0001
+            // ... 실제로 faces가 있는 patch만 나열
+        );
+    }
+);
+
+mergeTolerance 1e-6;
