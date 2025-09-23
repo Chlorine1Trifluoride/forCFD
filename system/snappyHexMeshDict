@@ -26,7 +26,7 @@ castellatedMeshControls
     maxGlobalCells              2000000;
     minRefinementCells          0;
 
-    nCellsBetweenLevels        3;
+    nCellsBetweenLevels         3;
 
     locationInMesh              (0 0 0);
 
@@ -50,7 +50,7 @@ castellatedMeshControls
 snapControls
 {
     nSmoothPatch                3;
-    tolerance                   2.0;
+    tolerance                   1.0;
     nSolveIter                  30;
     nRelaxIter                  5;
 }

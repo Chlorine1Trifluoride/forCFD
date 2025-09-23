@@ -23,7 +23,7 @@ functions
     Forces
     {
         type                forces;
-        functionObjectLibs  ("Libforces.so");
+        functionObjectLibs  ("libforces.so");
         patches             ("human");
         rho                 rhoInf;
         rhoInf              1.225;
