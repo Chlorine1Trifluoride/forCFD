@@ -9,6 +9,13 @@ FoamFile
 
 solvers
 {
+    Phi
+    {
+        solver                  PCG;
+        preconditioner          DIC;
+        tolerance               1e-06;
+        relTol                  0;
+    }
     p
     {
         solver                  PCG;

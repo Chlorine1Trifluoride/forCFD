@@ -6,7 +6,8 @@ FoamFile
     object                  controlDict;
 }
 
-application                 simpleFoam;
+application                 foamRun;
+solver                      incompressibleFluid;
 startFrom                   startTime;
 startTime                   0;
 endTime                     1;
@@ -23,7 +24,6 @@ functions
     Forces
     {
         type                forces;
-        functionObjectLibs  ("libforces.so");
         patches             ("human");
         rho                 rhoInf;
         rhoInf              1.225;
