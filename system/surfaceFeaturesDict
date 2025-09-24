@@ -11,5 +11,5 @@ surfaces
     "HumanHQ0deg.stl"
 );
 
-includedAngle 150;
+includedAngle 0;
 writeObj      yes;

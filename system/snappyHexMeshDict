@@ -19,7 +19,7 @@ addLayersControls
     {
         human
         {
-            nSurfaceLayers         3;
+            nSurfaceLayers      3;
         }
     }
 
@@ -45,6 +45,7 @@ geometry
     {
         type                    triSurfaceMesh;
         file                    "HumanHQ0deg.stl";
+        name                    human;
     }
 }
 
@@ -79,7 +80,7 @@ castellatedMeshControls
         }
     }
 
-    resolveFeatureAngle         60;
+    resolveFeatureAngle         0;
     allowFreeStandingZoneFaces  false;
 }
 

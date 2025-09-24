@@ -12,48 +12,55 @@ FoamFile
 {
     format      ascii;
     class       polyBoundaryMesh;
-    location    "constant/polyMesh";
+    location    "2/polyMesh";
     object      boundary;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-6
+7
 (
     front
     {
         type            patch;
-        nFaces          1600;
-        startFace       187200;
+        nFaces          0;
+        startFace       198152;
     }
     back
     {
         type            patch;
-        nFaces          1600;
-        startFace       188800;
+        nFaces          0;
+        startFace       198152;
     }
     top
     {
         type            patch;
-        nFaces          1600;
-        startFace       190400;
+        nFaces          0;
+        startFace       198152;
     }
     bottom
     {
         type            patch;
-        nFaces          1600;
-        startFace       192000;
+        nFaces          0;
+        startFace       198152;
     }
     right
     {
         type            patch;
-        nFaces          1600;
-        startFace       193600;
+        nFaces          0;
+        startFace       198152;
     }
     left
     {
         type            patch;
-        nFaces          1600;
-        startFace       195200;
+        nFaces          0;
+        startFace       198152;
+    }
+    human
+    {
+        type            wall;
+        inGroups        List<word> 1(wall);
+        nFaces          20892;
+        startFace       198152;
     }
 )
 

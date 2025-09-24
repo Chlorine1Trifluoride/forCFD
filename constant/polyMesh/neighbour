@@ -2,14 +2,17 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Version:  dev
+    \\  /    A nd           | Version:  12
      \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+/*   Windows 32 and 64 bit porting by blueCAPE: http://www.bluecape.com.pt   *\
+|  Based on Windows porting (2.0.x v4) by Symscape: http://www.symscape.com   |
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
     format      ascii;
     class       labelList;
-    note        "nPoints:68921  nCells:64000  nFaces:196800  nInternalFaces:187200";
+    note        "nPoints: 68921 nCells: 64000 nFaces: 196800 nInternalFaces: 187200";
     location    "constant/polyMesh";
     object      neighbour;
 }
