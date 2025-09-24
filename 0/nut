@@ -11,32 +11,7 @@ internalField   uniform 0;
 
 boundaryField
 {
-    front
-    {
-        type    calculated;
-        value   uniform 0;  
-    }
-    back
-    {
-        type    calculated;
-        value   uniform 0;  
-    }
-    right
-    {
-        type    calculated;
-        value   uniform 0;  
-    }
-    left
-    {
-        type    calculated;
-        value   uniform 0;  
-    }
-    top
-    {
-        type    calculated;
-        value   uniform 0;  
-    }
-    bottom
+    human
     {
         type    calculated;
         value   uniform 0;  

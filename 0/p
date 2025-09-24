@@ -13,17 +13,4 @@ dimensions              [1 -1 -2 0 0 0 0];
 internalField           uniform 0;
 
 
-boundaryField
-{
-    front               { type  zeroGradient; }
-    back
-    { 
-        type            fixedValue; 
-        value uniform   0; 
-    } 
-    right               { type  zeroGradient; }
-    top                 { type  zeroGradient; }
-    left                { type  zeroGradient; }
-    bottom              { type  zeroGradient; }
-    human               { type  zeroGradient; }
-}
+boundaryField           { human { type  zeroGradient; } }

@@ -10,20 +10,15 @@ FoamFile
 
 dimensions                [0 2 -2 0 0 0 0];
 
-internalField             uniform 0.09;
+internalField             uniform 0.375;
 
 
 boundaryField
 {
-    front
+    human
     {
-        type              fixedValue; 
-        value             uniform 0.09; 
+        type        kqRWallFunction;
+        value       uniform 0.375;
     }
-    back                  { type    zeroGradient; }
-    right                 { type    zeroGradient; }
-    top                   { type    zeroGradient; }
-    left                  { type    zeroGradient; }
-    bottom                { type    zeroGradient; }
 }
 

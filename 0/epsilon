@@ -7,17 +7,12 @@ FoamFile
     object          epsilon;
 }
 dimensions          [0 2 -3 0 0 0 0];
-internalField       uniform 1.0;
+internalField       uniform 0.135;
 boundaryField
 {
-    front
+    human
     {
-        type        fixedValue;
-        value       uniform 1.0;
+        type        epsilonWallFunction;
+        value       uniform 0.135;
     }
-    back            { type  zeroGradient; }
-    right           { type  zeroGradient; }
-    top             { type  zeroGradient; }
-    left            { type  zeroGradient; }
-    bottom          { type  zeroGradient; }
 }
