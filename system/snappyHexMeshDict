@@ -9,8 +9,36 @@ FoamFile
 mergeTolerance                  1e-6;
 castellatedMesh                 true;
 snap                            true;
-addLayers                       false;
+addLayers                       true;
 
+addLayersControls
+{
+    relativeSizes               true;
+
+    layers
+    {
+        human
+        {
+            nSurfaceLayers         3;
+        }
+    }
+
+    expansionRatio              1.2;
+    finalLayerThickness         0.3;
+    minThickness                0.2;
+    nGrow                       1;
+    featureAngle                60;
+    slipFeatureAngle            30;
+    nRelaxIter                  5;
+    nSmoothSurfaceNormals       1;
+    nSmoothNormals              3;
+    nSmoothThickness            10;
+    maxFaceThicknessRatio       0.5;
+    maxThicknessToMedialRatio   0.3;
+    minMedianAxisAngle          90;
+    nBufferCellsNoExtrude       0;
+    nLayerIter                  50;
+}
 geometry
 {
     human
@@ -19,6 +47,14 @@ geometry
         file                    "HumanHQ0deg.stl";
     }
 }
+
+features
+(
+    {
+        file                    "HumanHQ0deg.eMesh";
+        level                   3;
+    }
+);
 
 castellatedMeshControls
 {
@@ -34,7 +70,7 @@ castellatedMeshControls
     {   
         human 
         { 
-            level (1 2); 
+            level               (3 4); 
             patchInfo
             {
                 type            wall;
@@ -43,14 +79,14 @@ castellatedMeshControls
         }
     }
 
-    resolveFeatureAngle         0;
+    resolveFeatureAngle         60;
     allowFreeStandingZoneFaces  false;
 }
 
 snapControls
 {
     nSmoothPatch                3;
-    tolerance                   1.0;
+    tolerance                   4.0;
     nSolveIter                  30;
     nRelaxIter                  5;
 }
@@ -67,4 +103,6 @@ meshQualityControls
     minVolRatio                 0.01;
     errorReduction              0.75;
     maxConcave                  80;
+    minTwist                    0.02;
+    nSmoothScale                4;
 }
