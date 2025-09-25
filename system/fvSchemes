@@ -39,3 +39,7 @@ snGradSchemes
 {
     default             corrected;
 }
+wallDist
+{
+    method              meshWave;
+}

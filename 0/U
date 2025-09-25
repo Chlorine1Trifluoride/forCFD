@@ -17,7 +17,7 @@ boundaryField
         type    fixedValue;
         value   uniform (0 60 0);
     }
-    human       { tyep  noSlip; }
+    human       { type  noSlip; }
     bottom      { type  noSlip; }
     back        { type  zeroGradient; }
     top         { type  zeroGradient; }
