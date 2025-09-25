@@ -7,8 +7,7 @@ FoamFile
 }
 
 application             foamRun;
-solver                  simpleFoam;
-libs                    ("libsimpleFoam.so");
+solver                  incompressibleFluid;
 startFrom               startTime;
 startTime               0;
 endTime                 1;
