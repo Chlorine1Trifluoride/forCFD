@@ -17,14 +17,10 @@ boundaryField
         type    fixedValue;
         value   uniform (0 60 0);
     }
-    back        {type zeroGradient;}
-    top         {type zeroGradient;}
-    bottom      {type noSlip;}
-    left        {type zeroGradient;}
-    right       {type zeroGradient;}
-    human
-    {
-        type    fixedValue;
-        value   uniform (0 0 0);
-    }
+    human       { tyep  noSlip; }
+    bottom      { type  noSlip; }
+    back        { type  zeroGradient; }
+    top         { type  zeroGradient; }
+    left        { type  zeroGradient; }
+    right       { type  zeroGradient; }
 }

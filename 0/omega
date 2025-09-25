@@ -18,4 +18,14 @@ boundaryField
         type    omegaWallFunction;
         value   uniform 4.0;
     }
+    bottom
+    {
+        type    omegaWallFunction;
+        value   uniform 4.0;
+    }
+    front       { type zeroGradient; }
+    back        { type zeroGradient; }
+    left        { type zeroGradient; }
+    right       { type zeroGradient; }
+    top         { type zeroGradient; }
 }

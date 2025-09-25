@@ -15,4 +15,14 @@ boundaryField
         type        epsilonWallFunction;
         value       uniform 0.135;
     }
+    bottom
+    {
+        type        epsilonWallFunction;
+        value       uniform 0.135;
+    }
+    front           { type zeroGradient; }
+    back            { type zeroGradient; }
+    left            { type zeroGradient; }
+    right           { type zeroGradient; }
+    top             { type zeroGradient; }
 }

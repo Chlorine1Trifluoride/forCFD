@@ -65,7 +65,7 @@ castellatedMeshControls
 
     nCellsBetweenLevels         3;
 
-    locationInMesh              (0 0 0);
+    locationInMesh              (1 1 1);
 
     refinementSurfaces          
     {   

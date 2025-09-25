@@ -20,5 +20,15 @@ boundaryField
         type        kqRWallFunction;
         value       uniform 0.375;
     }
+    bottom
+    {
+        type        kqRWallFunction;
+        value       uniform 0.375;
+    }
+    front           { type zeroGradient; }
+    back            { type zeroGradient; }
+    left            { type zeroGradient; }
+    right           { type zeroGradient; }
+    top             { type zeroGradient; }
 }
 
