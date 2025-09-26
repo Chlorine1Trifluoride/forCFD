@@ -33,7 +33,7 @@ boundary
 	back
 	{
 		type 	patch;
-		faces 	( ( 0 1 5 4 ) );
+		faces	( ( 0 1 5 4 ) );
 	}
 	top
 	{
