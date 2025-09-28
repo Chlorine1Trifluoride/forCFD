@@ -27,7 +27,7 @@ FoamFile
     }
     back
     {
-        type            patch;
+        type            wall;
         nFaces          1600;
         startFace       1255336;
     }
@@ -39,7 +39,8 @@ FoamFile
     }
     bottom
     {
-        type            patch;
+        type            wall;
+        inGroups        List<word> 1(wall);
         nFaces          1600;
         startFace       1258536;
     }

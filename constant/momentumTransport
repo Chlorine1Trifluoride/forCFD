@@ -2,7 +2,8 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       dictionary;
+    class       momentumTransportModel;
+    location    "constant";
     object      momentumTransport;
 }
 

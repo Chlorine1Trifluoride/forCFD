@@ -23,6 +23,7 @@ divSchemes
     div(phi,U)          Gauss upwind;
     div(phi,k)          Gauss upwind;
     div(phi,epsilon)    Gauss upwind;
+    div(phi,omega)      Gauss upwind;
 }
 
 laplacianSchemes

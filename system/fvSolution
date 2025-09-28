@@ -25,6 +25,14 @@ solvers
         relTol                  0.1;
     }
 
+    omega
+    {
+        solver                  smoothSolver;
+        smoother                symGaussSeidel;
+        tolerance               1e-8;
+        relTol                  0.1;
+    }
+
     "(k|epsilon)"
     {
         solver                  smoothSolver;
@@ -37,8 +45,8 @@ solvers
 SIMPLE
 {
     nNonOrthogonalCorrectors    2;
-    pRefCell 0;
-    pRefValue 0;
+    pRefCell                    0;
+    pRefValue                   0;
 }
 
 relaxationFactors
