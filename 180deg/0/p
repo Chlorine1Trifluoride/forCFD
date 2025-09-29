@@ -18,7 +18,7 @@ boundaryField
     human       { type  zeroGradient; }
     bottom      { type  zeroGradient; }
     front       { type  zeroGradient; }
-    back        { type  zeroGradient; }
+    back        { type  fixedValue; value  uniform 0; }
     left        { type  zeroGradient; }
     right       { type  zeroGradient; }
     top         { type  zeroGradient; } 
