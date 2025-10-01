@@ -7,12 +7,12 @@ cases_root = os.path.join ("..", "forCFD")
 print("[ Select your task. ]")
 print("")
 print("")
-print("[ 1 ] foamRun in OpenFOAM")
-print("[ 2 ] COPY   FILE")
-print("[ 3 ] COPY   FOLDER")
-print("[ 4 ] DELETE FILE")
-print("[ 5 ] DELETE FOLDER")
-print("[ 6 ] 준수형 병신")
+print("[  1  ] foamRun in OpenFOAM")
+print("[  2  ] COPY   FILE")
+print("[  3  ] COPY   FOLDER")
+print("[  4  ] DELETE FILE")
+print("[  5  ] DELETE FOLDER")
+print("[ 100 ] 준수형 병신")
 print("")
 
 choice =  int(input("enter the NUMBER of task you want: "))
@@ -82,9 +82,9 @@ elif choice > 1 and choice < 6:
             print(f"[FATAL ERROR] DIRECTORY NOT FOUND: {target}")
 
 
-elif choice == 6:
+elif choice == 100:
   print("정답입니다!")
 
 
 else:
-  print("[INVALID CHOICE] Enter Either 1 or 2 or 3.")
+  print("[INVALID CHOICE]")
