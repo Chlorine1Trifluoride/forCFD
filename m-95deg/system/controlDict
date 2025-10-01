@@ -10,7 +10,7 @@ application             foamRun;
 solver                  incompressibleFluid;
 startFrom               startTime;
 startTime               0;
-endTime                 1;
+endTime                 20;
 deltaT                  1;
 writeControl            timeStep;
 writeInterval           1;
@@ -28,9 +28,12 @@ functions
         rho             rhoInf;
         rhoInf          1.225;
         LiftDir         (0 0 1);
-        DragDir         (0 -1 0);
-        CofR            (0 0 0.2);
+        DragDir         (0 1 0);
+        CofR            (0 0 0);
         writeControl    timeStep;
         writeInterval   1;
+        timeAverage     yes;
+        timeStart       10;
+        timeEnd         20;
     }
 }

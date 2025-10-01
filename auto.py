@@ -2,8 +2,7 @@ import os
 import subprocess
 import shutil
 
-
-cases_root = os.path.join ("..")
+cases_root = os.path.join ("..", "forCFD")
 
 print("Select your task.")
 print("[ 1 ] COPY   FILE")
