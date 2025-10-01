@@ -1,6 +1,9 @@
 import os
 import subprocess
 import shutil
+import re
+import numpy as np
+import pandas as pd
 
 cases_root = os.path.join ("..", "forCFD")
 
@@ -12,6 +15,7 @@ print("[  2  ] UPDATE FILE")
 print("[  3  ] UPDATE FOLDER")
 print("[  4  ] DELETE FILE")
 print("[  5  ] DELETE FOLDER")
+print("[  6  ] foamRun postprocessing")
 print("[ 100 ] 준수형 병신")
 print("")
 
@@ -33,11 +37,61 @@ if choice == 1:
     for p in process:
       p.wait()
 
+
+elif choice ==6:
+
+  results = []
+  for folder in os.listdir(cases_root):
+    if folder.endswith("deg"):
+      lift_list = []
+      drag_list = [] 
+      forces = os.path.join(cases_root, folder, "postProcessing", "forces", "0", "forces.dat")
+      with open(forces, "r") as f:
+        for line in f:
+          if line.startswith("#") or line.strip() == "":
+            continue
+          vectors = re.findall(r"\(([^()]+)\)", line)
+          f_a = vectors[0].strip().split()
+          f_b = vectors[1].strip().split()
+          drag = float(f_a[1])+float(f_b[1])
+          lift = float(f_a[2])+float(f_b[2])
+          drag_list.append(drag)
+          lift_list.append(lift)
+      drag_arr = np.array(drag_list)
+      lift_arr = np.array(lift_list)
+      drag_mean = np.mean(drag_arr)
+      lift_mean = np.mean(lift_arr)
+      drag_std = np.std(drag_arr)
+      lift_std = np.std(lift_arr)
+      if folder.startswith("m"):
+        results.append({
+          "Case": folder[1:],
+          "Lift Mean": lift_mean,
+          "Lift Std": lift_std,
+          "Drag Mean": drag_mean,
+          "Drag Std": drag_std
+        })
+      else:
+        results.append({
+          "Case": folder,
+          "Lift Mean": lift_mean,
+          "Lift Std": lift_std,
+          "Drag Mean": drag_mean,
+          "Drag Std": drag_std
+        })
+  df = pd.DataFrame(results)
+  df.to_excel("10423정승환-CFDsimulation_Result.xlsx", index=False)  
+
+
 elif choice > 1 and choice < 6:
   foldername = input("enter your FOLDER name: ")
+
+
   if choice == 2 or choice == 4:
     filename = input("enter your FILE name: ")
     source = os.path.join(cases_root, "CaseTemplate", foldername, filename)
+
+
     if choice == 2:
       if not os.path.exists(source):
         print(f"[FATAL ERROR] SOURCE NOT FOUND: {source}")
@@ -49,17 +103,19 @@ elif choice > 1 and choice < 6:
             shutil.copy2(source, target)
             print(f"Successfully Updated {filename} in {folder}")
 
+
     elif choice ==4:
       for folder in os.listdir(cases_root):
         if folder.endswith("deg"):
           target = os.path.join(cases_root, folder, foldername)
 
           if os.path.exists(target):
-            os.remove(target)
+            os.rmtree(target)
             print(f"Successfully Deleted {folder}")
             
           else:
             print(f"[FATAL ERROR] DIRECTORY NOT FOUND: {target}")
+
 
 
   elif choice == 3 or choice == 5:
@@ -72,7 +128,7 @@ elif choice > 1 and choice < 6:
         for folder in os.listdir(cases_root):
           if folder.endswith("deg"):
             target = os.path.join(cases_root, folder, foldername)
-            shutil.copytree(foldername, target)
+            shutil.copytree(cases_root, folder, foldername, target)
             print(f"Successfully Updated {foldername} in {folder}")
 
 
@@ -87,6 +143,7 @@ elif choice > 1 and choice < 6:
             
           else:
             print(f"[FATAL ERROR] FILE NOT FOUND: {target}")      
+
 
 
 elif choice == 100:
