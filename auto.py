@@ -4,14 +4,21 @@ import shutil
 
 cases_root = os.path.join ("..", "forCFD")
 
-print("Select your task.")
-print("[ 1 ] COPY   FILE")
-print("[ 2 ] DELETE FILE")
-print("[ 3 ] foamRun : Available in ONLY GITHUB CODESPACE")
-choice =  int(input())
+print("[ Select your task. ]")
+print("")
+print("")
+print("[ 1 ] foamRun in OpenFOAM")
+print("[ 2 ] COPY   FILE")
+print("[ 3 ] COPY   FOLDER")
+print("[ 4 ] DELETE FILE")
+print("[ 5 ] DELETE FOLDER")
+print("[ 6 ] 준수형 병신")
+print("")
+
+choice =  int(input("enter the NUMBER of task you want: "))
 
 
-if choice == 3:
+if choice == 1:
   case = []
   for folder in os.listdir(cases_root):
     if folder.endswith("deg"):
@@ -26,37 +33,57 @@ if choice == 3:
     for p in process:
       p.wait()
 
-
-elif choice == 1 or choice == 2:
+elif choice > 1 and choice < 6:
   foldername = input("enter your FOLDER name: ")
-  filename = input("enter your FILE name: ")
+  if choice == 2 or choice == 4:
+    if choice == 2:
+      
+      filename = input("enter your FILE name: ")
+      source = os.path.join(cases_root, "CaseTemplate", foldername, filename)
 
+      if not os.path.exists(source):
+        print(f"[FATAL ERROR] SOURCE NOT FOUND: {source}")
 
-  if choice == 1:
-    source = os.path.join(cases_root, "CaseTemplate", foldername, filename)
+      else:
+        for folder in os.listdir(cases_root):
+          if folder.endswith("deg"):
+            target = os.path.join(cases_root, folder, foldername, filename)
+            shutil.copy2(source, target)
+            print(f"Successfully Copied {filename} into {folder}")
+    elif choice ==4:
+      print("")
 
-    if not os.path.exists(source):
-      print(f"[FATAL ERROR] SOURCE NOT FOUND: {source}")
-
-    else:
+  elif choice == 3 or choice == 5:
+    if choice == 3:
+      filename = input("enter your FILE name: ")
       for folder in os.listdir(cases_root):
         if folder.endswith("deg"):
           target = os.path.join(cases_root, folder, foldername, filename)
-          shutil.copy2(source, target)
-          print(f"Successfully Copied {filename} into {folder}")
+
+          if os.path.exists(target):
+            os.remove(target)
+            print(f"Successfully Deleted {filename} in {folder}")
+            
+          else:
+            print(f"[FATAL ERROR] FILE NOT FOUND: {target}")
 
 
-  elif choice == 2:
-    for folder in os.listdir(cases_root):
-      if folder.endswith("deg"):
-        target = os.path.join(cases_root, folder, foldername, filename)
+    elif choice == 5: 
 
-        if os.path.exists(target):
-          os.remove(target)
-          print(f"Successfully Deleted {filename} in {folder}")
-          
-        else:
-          print(f"[FATAL ERROR] SOURCE NOT FOUND: {target}")
+      for folder in os.listdir(cases_root):
+        if folder.endswith("deg"):
+          target = os.path.join(cases_root, folder, foldername)
+
+          if os.path.exists(target):
+            os.remove(target)
+            print(f"Successfully Deleted {folder}")
+            
+          else:
+            print(f"[FATAL ERROR] DIRECTORY NOT FOUND: {target}")
+
+
+elif choice == 6:
+  print("정답입니다!")
 
 
 else:
