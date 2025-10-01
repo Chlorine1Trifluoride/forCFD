@@ -10,8 +10,8 @@ application             foamRun;
 solver                  incompressibleFluid;
 startFrom               startTime;
 startTime               0;
-endTime                 20;
-deltaT                  1;
+endTime                 200;
+deltaT                  10;
 writeControl            timeStep;
 writeInterval           20;
 purgeWrite              0;
@@ -33,7 +33,7 @@ functions
         writeControl    timeStep;
         writeInterval   1;
         timeAverage     yes;
-        timeStart       10;
-        timeEnd         20;
+        timeStart       100;
+        timeEnd         200;
     }
 }
