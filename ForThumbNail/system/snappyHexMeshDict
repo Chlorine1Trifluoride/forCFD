@@ -71,7 +71,7 @@ castellatedMeshControls
     {   
         human 
         { 
-            level               (3 4); 
+            level               (4 5); 
             patchInfo
             {
                 type            wall;

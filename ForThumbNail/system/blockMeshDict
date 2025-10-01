@@ -20,7 +20,7 @@ vertices
 	(  20 -20 -20 ) 	//7
 );
 
-blocks 			( hex (0 3 2 1 4 7 6 5) (40 40 40) simpleGrading (1 1 1) );
+blocks 			( hex (0 3 2 1 4 7 6 5) (100 100 100) simpleGrading (1 1 1) );
 
 boundary
 (
