@@ -33,7 +33,6 @@ functions
         writeControl    timeStep;
         writeInterval   1;
         timeAverage     yes;
-        log             yes;
         timeStart       10;
         timeEnd         20;
     }
