@@ -1,9 +1,11 @@
 import os
+import sys
 import subprocess
 import shutil
 import re
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 
 cases_root = os.path.join ("..", "forCFD")
 
@@ -16,6 +18,7 @@ print("[  3  ] UPDATE FOLDER")
 print("[  4  ] DELETE FILE")
 print("[  5  ] DELETE FOLDER")
 print("[  6  ] foamRun postprocessing")
+print("[  7  ] postprocessing : Graph Manufacturing Task")
 print("[ 100 ] 준수형 병신")
 print("")
 
@@ -85,6 +88,30 @@ elif choice ==6:
       })
   df = pd.DataFrame(results)
   df.to_excel("10423정승환-CFDsimulation_Result.xlsx", index=False)  
+
+elif choice == 7:
+
+  df = pd.read_excel("10423정승환_CFDsimulation_result.xlsx")
+
+  plt.plot(df["angle"], df["Lift Mean"], label = "Lift", color = "#0000ffff", linestyle="-", marker="o")
+  plt.plot(df["angle"], df["Drag Mean"], label = "Drag", color = "#ff0000ff", linestyle="-", marker="o")
+  plt.plot(df["angle"], df["Lift Std"], label = "Lift Std", color = "#0000ff55", linestyle=":", marker="o")
+  plt.plot(df["angle"], df["Drag Std"], label = "Drag Std", color = "#ff000055", linestyle=":", marker="o")
+
+  plt.title("Lift and Drag in Change of Angle of Human Body")
+  plt.xlabel("angle        [ degree ]")
+  plt.ylabel("forces       [   N    ]")
+  plt.grid(True)
+  plt.legend(
+    loc       = "lower right",
+    frameon   = True,
+    edgecolor = "black",
+    facecolor = "black",
+    )
+  
+  plt.savefig("ForcesGraph.png", dpi=300, bbox_inches='tight')
+  plt.show()
+
 
 
 elif choice > 1 and choice < 6:
@@ -158,3 +185,22 @@ elif choice == 100:
 
 else:
   print("[INVALID CHOICE]")
+
+print()
+print()
+print("Would You Try Again?")
+print()
+a = True
+while a == True:
+  ans = input("[Y/N]: ")
+  if ans == "Y" or ans == "y":
+    os.execv(sys.executable, ["python"] + sys.argv)
+  elif ans == "N" or ans == "n":
+    pass
+  elif ans == "준수형 병신":
+    print("정답입니다!!!")
+  else:
+    print("Please Enter Either Y or N")
+    a = False
+if a == False:
+  a = True
