@@ -8,19 +8,25 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 cases_root = os.path.join ("..", "forCFD")
-
-print("[ Select your task. ]")
+print()
+print("|=========================================================|")
+print("                  [ Select your task. ]")
 print("")
 print("")
-print("[  1  ] foamRun in OpenFOAM")
-print("[  2  ] UPDATE FILE")
-print("[  3  ] UPDATE FOLDER")
-print("[  4  ] DELETE FILE")
-print("[  5  ] DELETE FOLDER")
-print("[  6  ] foamRun postprocessing")
-print("[  7  ] postprocessing : Graph Manufacturing Task")
-print("[ 100 ] 준수형 병신")
+print("     [  1  ]  foamRun in OpenFOAM")
+print("     [  2  ]  UPDATE FILE")
+print("     [  3  ]  UPDATE FOLDER")
+print("     [  4  ]  DELETE FILE")
+print("     [  5  ]  DELETE FOLDER")
+print("     [  6  ]  foamRun postprocessing")
+print("     [  7  ]  postprocessing : Graph Manufacturing Task")
+print("     [ 100 ]  준수형 병신")
 print("")
+print()
+print("|=========================================================|")
+print()
+print()
+print()
 
 choice =  int(input("enter the NUMBER of task you want: "))
 
@@ -91,12 +97,12 @@ elif choice ==6:
 
 elif choice == 7:
 
-  df = pd.read_excel("10423정승환_CFDsimulation_result.xlsx")
+  df = pd.read_excel("10423정승환_CFDsimulation_result.xlsx", header=0)
 
-  plt.plot(df["angle"], df["Lift Mean"], label = "Lift", color = "#0000ffff", linestyle="-", marker="o")
-  plt.plot(df["angle"], df["Drag Mean"], label = "Drag", color = "#ff0000ff", linestyle="-", marker="o")
-  plt.plot(df["angle"], df["Lift Std"], label = "Lift Std", color = "#0000ff55", linestyle=":", marker="o")
-  plt.plot(df["angle"], df["Drag Std"], label = "Drag Std", color = "#ff000055", linestyle=":", marker="o")
+  plt.plot(df["angle"], df["Lift Mean"], label = "Lift", color = (1.0, 0.0, 0.0, 1.0), linestyle="-", marker="o")
+  plt.plot(df["angle"], df["Drag Mean"], label = "Drag", color = (0.0, 0.0, 1.0, 1.0), linestyle="-", marker="o")
+  plt.plot(df["angle"], df["Lift Std"], label = "Lift Std", color = (0.0, 0.0, 1.0, 0.4), linestyle=":", marker="o")
+  plt.plot(df["angle"], df["Drag Std"], label = "Drag Std", color = (1.0, 0.0, 0.0, 0.4), linestyle=":", marker="o")
 
   plt.title("Lift and Drag in Change of Angle of Human Body")
   plt.xlabel("angle        [ degree ]")
