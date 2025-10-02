@@ -114,7 +114,7 @@ elif choice == 7:
     loc       = "lower right",
     frameon   = True,
     edgecolor = "black",
-    facecolor = "black",
+    facecolor = "white",
     )
   
   plt.savefig("ForcesGraph.png", dpi=300, bbox_inches='tight')
