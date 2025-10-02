@@ -134,7 +134,7 @@ elif choice == 8:
         angle = float(folder[1:-3])
       else:
         angle = float(folder[:-3])
-      command = f" transformPoints -rotate '(1 0 0 {angle})' "
+      command = f" transformPoints 'Rx={angle}' "
       p = subprocess.Popen(command, cwd = os.path.join(cases_root, folder), shell=True)
       process.append(p)
     for p in process:
