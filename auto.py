@@ -97,14 +97,15 @@ elif choice ==6:
 
 elif choice == 7:
 
-  df = pd.read_excel("10423정승환_CFDsimulation_result.xlsx", header=0)
+  df = pd.read_excel("10423정승환-CFDsimulation_Result.xlsx", header=0)
 
+  df["angle"] = df["Case"].str.replace("deg", "").astype(float)
   plt.plot(df["angle"], df["Lift Mean"], label = "Lift", color = (1.0, 0.0, 0.0, 1.0), linestyle="-", marker="o")
   plt.plot(df["angle"], df["Drag Mean"], label = "Drag", color = (0.0, 0.0, 1.0, 1.0), linestyle="-", marker="o")
   plt.plot(df["angle"], df["Lift Std"], label = "Lift Std", color = (0.0, 0.0, 1.0, 0.4), linestyle=":", marker="o")
   plt.plot(df["angle"], df["Drag Std"], label = "Drag Std", color = (1.0, 0.0, 0.0, 0.4), linestyle=":", marker="o")
 
-  plt.title("Lift and Drag in Change of Angle of Human Body")
+  plt.title("Lift and Drag of Human Body  [ Wind Velocity : 60m/s ]")
   plt.xlabel("angle        [ degree ]")
   plt.ylabel("forces       [   N    ]")
   plt.grid(True)
