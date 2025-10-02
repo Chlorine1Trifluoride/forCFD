@@ -121,8 +121,25 @@ elif choice == 7:
   plt.show()
 
 elif choice == 8:
+  case = []
   for folder in os.listdir(cases_root):
-    
+    if folder.endswith("deg"):
+      case.append(folder)
+      print(f"System found {folder}")
+  for i in range(0, len(case), 9):
+    batch = case[ i : i+9 ]
+    process = []
+    for folder in batch:
+      if folder.startswith("m"):
+        angle = float(folder[1:-3])
+      else:
+        angle = float(folder[:-3])
+      command = f" transformPoints -rotate '(1 0 0 {angle})' "
+      p = subprocess.Popen(command, cwd = os.path.join(cases_root, folder), shell=True)
+      process.append(p)
+    for p in process:
+      p.wait()
+
 
 elif choice > 1 and choice < 6:
   foldername = input("enter your FOLDER name: ")
@@ -196,6 +213,7 @@ elif choice == 100:
 else:
   print("[INVALID CHOICE]")
 
+'''
 print()
 print()
 print("Would You Try Again?")
@@ -212,3 +230,4 @@ while a == True:
   else:
     print("Please Enter Either Y or N")
     a = False
+'''
