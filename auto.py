@@ -45,7 +45,7 @@ elif choice ==6:
     if folder.endswith("deg"):
       lift_list = []
       drag_list = [] 
-      forces = os.path.join(cases_root, folder, "postProcessing", "forces", "0", "forces.dat")
+      forces = os.path.join(cases_root, folder, "postProcessing", "Forces", "0", "forces.dat")
       with open(forces, "r") as f:
         for line in f:
           if line.startswith("#") or line.strip() == "":
