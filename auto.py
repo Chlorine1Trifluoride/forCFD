@@ -196,11 +196,9 @@ while a == True:
   if ans == "Y" or ans == "y":
     os.execv(sys.executable, ["python"] + sys.argv)
   elif ans == "N" or ans == "n":
-    pass
+    a = False
   elif ans == "준수형 병신":
     print("정답입니다!!!")
   else:
     print("Please Enter Either Y or N")
     a = False
-if a == False:
-  a = True
