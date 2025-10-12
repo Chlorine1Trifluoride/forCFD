@@ -9,22 +9,21 @@ import matplotlib.pyplot as plt
 
 cases_root = os.path.join ("..", "forCFD")
 print()
-print("|=========================================================|")
-print("                  [ Select your task. ]")
-print("")
-print("")
-print("     [  1  ]  foamRun in OpenFOAM")
-print("     [  2  ]  UPDATE FILE")
-print("     [  3  ]  UPDATE FOLDER")
-print("     [  4  ]  DELETE FILE")
-print("     [  5  ]  DELETE FOLDER")
-print("     [  6  ]  foamRun postprocessing")
-print("     [  7  ]  postprocessing : Graph Manufacturing Task")
-print("     [  8  ]  transformPoints")
-print("     [ 100 ]  준수형 병신")
-print("")
-print()
-print("|=========================================================|")
+print("┌─────────────────────[AUTO PROCESSER]─────────────────────┐")
+print("│                                                          │")
+print("│             FINISH IT QUICKLY, MOTHERF**KER!             │")
+print("│                                                          │")
+print("│    [  1  ]  foamRun in OpenFOAM                          │")
+print("│    [  2  ]  UPDATE FILE                                  │")
+print("│    [  3  ]  UPDATE FOLDER                                │")
+print("│    [  4  ]  DELETE FILE                                  │")
+print("│    [  5  ]  DELETE FOLDER                                │")
+print("│    [  6  ]  foamRun postprocessing                       │")
+print("│    [  7  ]  postprocessing : Graph Manufacturing Task    │")
+print("│    [  8  ]  transformPoints                              │")
+print("│                                                          │")
+print("│                                                          │")
+print("└──────────────────────────────────────────────────────────┘")
 print()
 print()
 print()
@@ -79,7 +78,7 @@ elif choice ==6:
     lift_std = np.std(lift_arr)
     if folder.startswith("m"):
       results.append({
-        "Case": folder[1:],
+        "Case": 360+float(folder[1:-3]),
         "Lift Mean": lift_mean,
         "Lift Std": lift_std,
         "Drag Mean": drag_mean,
@@ -87,7 +86,7 @@ elif choice ==6:
       })
     else:
       results.append({
-        "Case": folder,
+        "Case": float(folder[:-3]),
         "Lift Mean": lift_mean,
         "Lift Std": lift_std,
         "Drag Mean": drag_mean,
@@ -100,7 +99,7 @@ elif choice == 7:
 
   df = pd.read_excel("10423정승환-CFDsimulation_Result.xlsx", header=0)
 
-  df["angle"] = df["Case"].str.replace("deg", "").astype(float)
+  df["angle"] = df["Case"]
   plt.plot(df["angle"], df["Lift Mean"], label = "Lift", color = (1.0, 0.0, 0.0, 1.0), linestyle="-", marker="o")
   plt.plot(df["angle"], df["Drag Mean"], label = "Drag", color = (0.0, 0.0, 1.0, 1.0), linestyle="-", marker="o")
   plt.plot(df["angle"], df["Lift Std"], label = "Lift Std", color = (0.0, 0.0, 1.0, 0.4), linestyle=":", marker="o")
@@ -207,27 +206,19 @@ elif choice > 1 and choice < 6:
 
 
 elif choice == 100:
-  print("정답입니다!")
+  print("뭐 병신아")
 
+  
+elif len(choice) >= 2 and choice[-2:] == "병신":
+    print(f"정답입니다!! {choice[:-2]}은(는) 병신입니다!!!")
+    print("해당 프로그램의 발언은 제작자의 의도와 전혀 무관함을 알려드립니다.")
+    print("본 프로그램에서 누군가에 대해 '병신'이라고 표현하는 것은 사용자의 입력 내용에 의하여 결정됩니다.")
+    print("  ┌──────────────────[ CONGRATULATIONS!!! ]──────────────────┐")
+    print("  │                   YOU GUESSED  RIGHT!!                   │")
+    print("  │                YOU FOUND THE EASTER EGG!!                │")
+    print('f"│      I WILL GIVE YOU {null} DOLLAR AS YOUR PRIZE!!!      │"')
+    print("  └──────────────────────────────────────────────────────────┘")
 
 else:
   print("[INVALID CHOICE]")
 
-'''
-print()
-print()
-print("Would You Try Again?")
-print()
-a = True
-while a == True:
-  ans = input("[Y/N]: ")
-  if ans == "Y" or ans == "y":
-    os.execv(sys.executable, ["python"] + sys.argv)
-  elif ans == "N" or ans == "n":
-    a = False
-  elif ans == "준수형 병신":
-    print("정답입니다!!!")
-  else:
-    print("Please Enter Either Y or N")
-    a = False
-'''
