@@ -1,13 +1,14 @@
 import subprocess
 
 def launch(cmd): 
-    subprocess.run(['C:\users\user\AppData\Local\Programs\Python\Python311\python.exe', cmd], shell = False)
-print()
-print("┌────────────────────[PROGRAM LAUNCHER]────────────────────┐")
-print("│                                                          │")
-print("│             FINISH IT QUICKLY, MOTHERF**KER!             │")
-print("│                                                          │")
-print("└──────────────────────────────────────────────────────────┘")
+    subprocess.run(['C:\\users\\user\\AppData\\Local\\Programs\\Python\\Python314\\python.exe', cmd], shell = False)
+print("""
+┌────────────────────[PROGRAM LAUNCHER]────────────────────┐
+│                                                          │
+│             FINISH IT QUICKLY, MOTHERF**KER!             │
+│                                                          │
+└──────────────────────────────────────────────────────────┘
+""")
 cmd =  input("Enter NAME of your PYTHON file: ")
 if cmd.endswith('.py'):
     launch(cmd)

@@ -6,7 +6,5 @@ print("┌───────────────────────�
 print("│             FINISH IT QUICKLY, MOTHERF**KER!             │")
 print("└──────────────────────────────────────────────────────────┘")
 runpip("--version")
-runpip("install numpy")
-runpip("install pandas")
-runpip("install matplotlib")
+runpip("install -r requirements.txt")
 sp.run([sys.executable, "auto.py"], shell=False)
