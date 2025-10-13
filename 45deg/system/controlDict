@@ -9,17 +9,17 @@ FoamFile
 application             foamRun;
 solver                  incompressibleFluid;
 startFrom               startTime;
-startTime               500;
-endTime                 505;
-deltaT                  0.1;
+startTime               0;
+endTime                 500;
+deltaT                  500;
 writeControl            timeStep;
-writeInterval           1000;
+writeInterval           1;
 purgeWrite              0;
 writeFormat             ascii;
 writePrecision          6;
 writeCompression        off;
 runtimeModifiable       yes;
-
+/*
 functions
 {
     Forces
@@ -38,4 +38,4 @@ functions
         timeEnd         505;
     }
 }
-
+*/

@@ -13,7 +13,7 @@ startTime               500;
 endTime                 505;
 deltaT                  0.1;
 writeControl            timeStep;
-writeInterval           1000;
+writeInterval           100000;
 purgeWrite              0;
 writeFormat             ascii;
 writePrecision          6;

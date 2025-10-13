@@ -17,51 +17,44 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-7
+6
 (
     front
     {
         type            patch;
         nFaces          1600;
-        startFace       1279625;
+        startFace       187200;
     }
     back
     {
         type            patch;
         nFaces          1600;
-        startFace       1281225;
+        startFace       188800;
     }
     top
     {
         type            patch;
         nFaces          1600;
-        startFace       1282825;
+        startFace       190400;
     }
     bottom
     {
         type            wall;
         inGroups        List<word> 1(wall);
         nFaces          1600;
-        startFace       1284425;
+        startFace       192000;
     }
     right
     {
         type            patch;
         nFaces          1600;
-        startFace       1286025;
+        startFace       193600;
     }
     left
     {
         type            patch;
         nFaces          1600;
-        startFace       1287625;
-    }
-    human
-    {
-        type            wall;
-        inGroups        List<word> 1(wall);
-        nFaces          57077;
-        startFace       1289225;
+        startFace       195200;
     }
 )
 
