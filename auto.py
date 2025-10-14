@@ -99,9 +99,9 @@ while repeat == True:
       df = pd.read_excel("10423정승환-CFDsimulation_Result.xlsx", header=0)
 
       df["angle"] = df["Case"]
-      plt.plot(df["angle"], df["Lift Mean"], label = "Lift", color = (1.0, 0.0, 0.0, 1.0), linestyle="-", marker="")
-      plt.plot(df["angle"], df["Drag Mean"], label = "Drag", color = (0.0, 0.0, 1.0, 1.0), linestyle="-", marker="")
-      plt.plot(df["angle"], df["Lift Std"], label = "Lift Std", color = (0.0, 0.0, 1.0, 0.4), linestyle=":", marker="")
+      plt.plot(df["angle"], df["Lift Mean"], label = "Lift", color = (0.0, 0.0, 0.0, 1.0), linestyle="-", marker="")
+      plt.plot(df["angle"], df["Drag Mean"], label = "Drag", color = (0.0, 1.0, 0.0, 1.0), linestyle="-", marker="")
+      plt.plot(df["angle"], df["Lift Std"], label = "Lift Std", color = (0.0, 1.0, 0.0, 0.4), linestyle=":", marker="")
       plt.plot(df["angle"], df["Drag Std"], label = "Drag Std", color = (1.0, 0.0, 0.0, 0.4), linestyle=":", marker="")
 
       plt.title("Lift and Drag of Human Body  [ Wind Velocity : 60m/s ]")
