@@ -2,9 +2,11 @@ import subprocess as sp
 import sys
 def runpip(cmd):
     sp.run([sys.executable, "-m", "pip"] + cmd.split(), shell=False)
-print("┌────────────────────────[start.py]────────────────────────┐")
-print("│             FINISH IT QUICKLY, MOTHERF**KER!             │")
-print("└──────────────────────────────────────────────────────────┘")
+print("""
+┌────────────────────────[start.py]────────────────────────┐
+│             FINISH IT QUICKLY, MOTHERF**KER!             │
+└──────────────────────────────────────────────────────────┘
+      """)
 runpip("--version")
 runpip("install -r requirements.txt")
 sp.run([sys.executable, "auto.py"], shell=False)

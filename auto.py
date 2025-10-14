@@ -57,7 +57,7 @@ while repeat == True:
       for folder in folders:
         lift_list = []
         drag_list = [] 
-        forces = os.path.join(cases_root, folder, "postProcessing", "Forces", "0", "forces.dat")
+        forces = os.path.join(cases_root, folder, "postProcessing", "Forces", "500", "forces.dat")
         with open(forces, "r") as f:
           for line in f:
             if line.startswith("#") or line.strip() == "":
@@ -77,7 +77,7 @@ while repeat == True:
         lift_std = np.std(lift_arr)
         if folder.startswith("m"):
           results.append({
-            "Case": 360+float(folder[1:-3]),
+            "Case": float(folder[1:-3]),
             "Lift Mean": lift_mean,
             "Lift Std": lift_std,
             "Drag Mean": drag_mean,
@@ -99,10 +99,10 @@ while repeat == True:
       df = pd.read_excel("10423정승환-CFDsimulation_Result.xlsx", header=0)
 
       df["angle"] = df["Case"]
-      plt.plot(df["angle"], df["Lift Mean"], label = "Lift", color = (1.0, 0.0, 0.0, 1.0), linestyle="-", marker="o")
-      plt.plot(df["angle"], df["Drag Mean"], label = "Drag", color = (0.0, 0.0, 1.0, 1.0), linestyle="-", marker="o")
-      plt.plot(df["angle"], df["Lift Std"], label = "Lift Std", color = (0.0, 0.0, 1.0, 0.4), linestyle=":", marker="o")
-      plt.plot(df["angle"], df["Drag Std"], label = "Drag Std", color = (1.0, 0.0, 0.0, 0.4), linestyle=":", marker="o")
+      plt.plot(df["angle"], df["Lift Mean"], label = "Lift", color = (1.0, 0.0, 0.0, 1.0), linestyle="-", marker="")
+      plt.plot(df["angle"], df["Drag Mean"], label = "Drag", color = (0.0, 0.0, 1.0, 1.0), linestyle="-", marker="")
+      plt.plot(df["angle"], df["Lift Std"], label = "Lift Std", color = (0.0, 0.0, 1.0, 0.4), linestyle=":", marker="")
+      plt.plot(df["angle"], df["Drag Std"], label = "Drag Std", color = (1.0, 0.0, 0.0, 0.4), linestyle=":", marker="")
 
       plt.title("Lift and Drag of Human Body  [ Wind Velocity : 60m/s ]")
       plt.xlabel("angle        [ degree ]")
