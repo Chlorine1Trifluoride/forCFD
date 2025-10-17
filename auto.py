@@ -5,6 +5,7 @@ import re
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import colorama
 
 cases_root = os.path.join ("..", "forCFD")
 
@@ -173,15 +174,6 @@ while repeat == True:
   │                                                          │
   │             FINISH IT QUICKLY, MOTHERF**KER!             │
   │                                                          │
-  │                                      * * *               │
-  │                                   *         *            │
-  │ ┬   ┬ ┬───┐ ┌─┬─┐ ┬     │ │ │   *             *          │
-  │ │   │ │       │   │     │ │ │  *     │ ┌──     *         │
-  │ ├───┤ ├──┤    │   │     │ │ │  *     └─┼─┐     *         │
-  │ │   │ │       │   │     │ │ │  *     ──┘ │     *         │
-  │ ┴   ┴ ┴───┘ └─┴─┘ ┴───┘ . . .   *             *          │
-  │                                   *         *            │
-  │                                      * * *               │
   │                                                          │
   │   I.   Case management                                   │
   │                                                          │
