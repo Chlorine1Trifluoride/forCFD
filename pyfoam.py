@@ -114,7 +114,7 @@ def totalgraph():
     for case in folders:
         case.forces()
     df = pd.DataFrame(results)
-    df.to_excel("total_forces_10423.xlsx" index=False)
+    df.to_excel("total_forces_10423.xlsx", index=False)
     plt.plot(df["Case"], df["Lift"], label = "Lift", color = (0.0, 1.0, 0.0, 1.0), linestyle="-", marker="")
     plt.plot(df["Case"], df["Drag"], label = "Drag", color = (0.0, 1.0, 0.0, 1.0), linestyle="-", marker="")
     plt.plot(df["Case"], df["Lift Std"], label = "Lift Std", color = (0.0, 1.0, 0.0, 0.4), linestyle=":", marker="")
@@ -146,17 +146,23 @@ def conc(func):
             batch = cases[i : i+num]
             for case in batch:
                 func(case)
-                process.append(p)
-            for p in process:
-                p.wait()
+            try:
+                for p in process:
+                    p.wait()
+            except:
+                pass
     return wrapper
 
 @conc
 def foamRun(case):
+    global p
     case.foamRun()
+    process.append(p)
 @conc
 def transformPoints(case):
+    global p
     case.transformPoints()
+    process.append(p)
 @conc
 def singlegraph(case):
     case.forces()
