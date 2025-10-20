@@ -21,23 +21,24 @@ class Case:
         print(self.name)
 
     def delete(self, folder, file=None):
-        source = os.path.join(cases_root, self.name, folder, file)
-        if os.path.exists(source):
-            if file==None:
-                shutil.rmtree(source)
-            else:
-                os.remove(source)
+        source = os.path.join(cases_root, self.name, folder,)
+        if file ==None:
+            shutil.rmtree(source)
             print(f"Deleted {source}")
+        elif os.path.exists(os.path.join(source, file)):
+            os.remove(source, file)
+            print(f"Deleted {os.path.join(source, file)}")
 
-    def update(self, folder, file=None):
-        target = os.path.join(cases_root, "CaseTemplate", folder, file)
-        source = os.path.join(cases_root, self.name, folder, file)
-        if os.path.exists(source) and os.path.exists(target):
-            if file==None:
-                shutil.copytree(source, target, dirs_exist_ok=True)
-            else:
-                os.copy2(source, target)
+    def update(self, rawfolder, file=None):
+        folder = str(rawfolder)
+        target = os.path.join(cases_root, "CaseTemplate", folder)
+        source = os.path.join(cases_root, self.name, folder)
+        if file==None and os.path.exists(target):
+            shutil.copytree(target, source, dirs_exist_ok=True)
             print(f"Updated {source}")
+        elif os.path.exists(os.path.join(target, file)):
+            shutil.copy2(os.path.join(target, file), os.path.join(source, file) )
+            print(f"Updated {os.path.join(source, file)}")
     def forces(self):
         timelines = []
         drag_list = []
@@ -69,18 +70,19 @@ class Case:
             "Drag Mean": drag_mean,
             "Drag Std": drag_std
         })
+        df = None
         df = pd.DataFrame({
             'Time': timelines,
             "Drag": drag_arr,
-            "Lift": lift_arr,
-            "Drag Mean" : drag_mean,
-            "Lift Mean": lift_mean
+            "Lift": lift_arr
         })
         df.to_excel(f"single_forces_{self.name}.xlsx", index=False)
        
         plt.plot(df["Time"], df["Lift"], label = "Lift", color = (0.0, 0.0, 0.0, 1.0), linestyle="-", marker="")
         plt.plot(df["Time"], df["Drag"], label = "Drag", color = (0.0, 1.0, 0.0, 1.0), linestyle="-", marker="")
-        plt.title("Lift and Drag of Human Body  [ Wind Velocity : 60m/s ]")
+        plt.title(f"Lift and Drag of Human Body [ angle : {self.angle}deg ] [ Wind Velocity : 60m/s ]")
+        plt.xticks([])
+        plt.grid(axis='x', visible=False)
         plt.xlabel("Time         [   s   ]")
         plt.ylabel("forces       [   N   ]")
         plt.grid(True)
