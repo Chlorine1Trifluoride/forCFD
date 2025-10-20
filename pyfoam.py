@@ -9,16 +9,21 @@ import matplotlib.pyplot as plt
 cases_root = os.path.join("..", "forCFD")
 cases = []
 results = []
+process = []
 
 class Case:
     def __init__ (self, name):
-        self.name=name
-        if self.name.startswith ("m-"):
-            self.angle = float(self.name[1:-3])
-        else:
-            self.angle = float(self.name[:-3])
-        cases.append(self)
-        print(self.name)
+        try:
+            self.name=name
+            if self.name.startswith ("m-"):
+                self.angle = float(self.name[1:-3])
+            else:
+                self.angle = float(self.name[:-3])
+            cases.append(self)
+            cases.sort(key = lambda case:case.angle)
+            print(self.name)
+        except:
+            pass
 
     def delete(self, folder, file=None):
         source = os.path.join(cases_root, self.name, folder,)
@@ -26,7 +31,7 @@ class Case:
             shutil.rmtree(source)
             print(f"Deleted {source}")
         elif os.path.exists(os.path.join(source, file)):
-            os.remove(source, file)
+            os.remove(os.path.join(source, file))
             print(f"Deleted {os.path.join(source, file)}")
 
     def update(self, rawfolder, file=None):
@@ -40,6 +45,7 @@ class Case:
             shutil.copy2(os.path.join(target, file), os.path.join(source, file) )
             print(f"Updated {os.path.join(source, file)}")
     def forces(self):
+        global timelines, drag_list, lift_list
         timelines = []
         drag_list = []
         lift_list = []
@@ -78,13 +84,13 @@ class Case:
         })
         df.to_excel(f"single_forces_{self.name}.xlsx", index=False)
        
-        plt.plot(df["Time"], df["Lift"], label = "Lift", color = (0.0, 0.0, 0.0, 1.0), linestyle="-", marker="")
-        plt.plot(df["Time"], df["Drag"], label = "Drag", color = (0.0, 1.0, 0.0, 1.0), linestyle="-", marker="")
+        plt.plot(df["Time"], df["Lift"], label = "Lift", color = (0.0, 1.0, 0.0, 1.0), linestyle="-", marker="")
+        plt.plot(df["Time"], df["Drag"], label = "Drag", color = (0.0, 0.0, 0.0, 1.0), linestyle="-", marker="")
         plt.title(f"Lift and Drag of Human Body [ angle : {self.angle}deg ] [ Wind Velocity : 60m/s ]")
         plt.xticks([])
         plt.grid(axis='x', visible=False)
         plt.xlabel("Time         [   s   ]")
-        plt.ylabel("forces       [   N   ]")
+        plt.ylabel("Force        [   N   ]")
         plt.grid(True)
         plt.legend(
             loc       = "lower right",
@@ -94,6 +100,63 @@ class Case:
             )
 
         plt.savefig(f"single_forces_{self.name}.png", dpi=300, bbox_inches='tight')
+    
+    def foamRun(self):
+        p = subprocess.Popen(["foamRun"], cwd = os.path.join(cases_root, self.name))
+    def transformPoints(self):
+        command = f"transformPoints 'Rx={self.angle}' "
+        p = subprocess.Popen(command, cwd = os.path.join(cases_root, self.name), shell=True)
 
-            
+def totalgraph():
+    global results
+    results = []
+    folders = sorted(cases, key = lambda f:f.angle )
+    for case in folders:
+        case.forces()
+    df = pd.DataFrame(results)
+    df.to_excel("total_forces_10423.xlsx" index=False)
+    plt.plot(df["Case"], df["Lift"], label = "Lift", color = (0.0, 1.0, 0.0, 1.0), linestyle="-", marker="")
+    plt.plot(df["Case"], df["Drag"], label = "Drag", color = (0.0, 1.0, 0.0, 1.0), linestyle="-", marker="")
+    plt.plot(df["Case"], df["Lift Std"], label = "Lift Std", color = (0.0, 1.0, 0.0, 0.4), linestyle=":", marker="")
+    plt.plot(df["Case"], df["Drag Std"], label = "Drag Std", color = (0.0, 0.0, 0.0, 0.4), linestyle=":", marker="")
+    plt.title(f"Lift and Drag of Human Body [ angle : [ Wind Velocity : 60m/s ]")
+    plt.xlabel("Angle        [  deg  ]")
+    plt.ylabel("Force        [   N   ]")
+    plt.grid(True)
+    plt.legend(
+        loc       = "lower right",
+        frameon   = True,
+        edgecolor = "black",
+        facecolor = "white",
+        )
 
+    plt.savefig(f"single_forces_10423.png", dpi=300, bbox_inches='tight')
+
+def launch():
+    for case in os.listdir(cases_root):
+        case = Case(case)
+
+
+def conc(func):
+    def wrapper():
+        global process
+        process = []
+        num = int(input("Concurrency level: "))
+        for i in range(0, len(cases), num):
+            batch = cases[i : i+num]
+            for case in batch:
+                func(case)
+                process.append(p)
+            for p in process:
+                p.wait()
+    return wrapper
+
+@conc
+def foamRun(case):
+    case.foamRun()
+@conc
+def transformPoints(case):
+    case.transformPoints()
+@conc
+def singlegraph(case):
+    case.forces()
