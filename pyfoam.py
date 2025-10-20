@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 
 cases_root = os.path.join("..", "forCFD")
 cases = []
+results = []
 
 class Case:
     def __init__ (self, name):
@@ -41,7 +42,6 @@ class Case:
         timelines = []
         drag_list = []
         lift_list = []
-        results = []
         dat = os.path.join(cases_root, self.name, "postProcessing", "Forces", "500", "forces.dat")
         with open(dat, "r")as f:
             for line in f:
@@ -70,7 +70,7 @@ class Case:
             "Drag Std": drag_std
         })
         df = pd.DataFrame({
-            'Time':timelines,
+            'Time': timelines,
             "Drag": drag_arr,
             "Lift": lift_arr,
             "Drag Mean" : drag_mean,
@@ -80,8 +80,6 @@ class Case:
        
         plt.plot(df["Time"], df["Lift"], label = "Lift", color = (0.0, 0.0, 0.0, 1.0), linestyle="-", marker="")
         plt.plot(df["Time"], df["Drag"], label = "Drag", color = (0.0, 1.0, 0.0, 1.0), linestyle="-", marker="")
-        plt.plot(df["Time"], df["Lift Mean"], label = "Lift Mean", color = (0.0, 1.0, 0.0, 0.4), linestyle=":", marker="")
-        plt.plot(df["Time"], df["Drag Mean"], label = "Drag Mean", color = (1.0, 0.0, 0.0, 0.4), linestyle=":", marker="")
         plt.title("Lift and Drag of Human Body  [ Wind Velocity : 60m/s ]")
         plt.xlabel("Time         [   s   ]")
         plt.ylabel("forces       [   N   ]")
