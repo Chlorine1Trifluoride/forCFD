@@ -21,6 +21,7 @@ def main():
         "",
         "",
         "I.   Case management",
+        "",
         "  [  1  ]  Update FILE",
         "  [  2  ]  Update DIRECTORY",
         "",

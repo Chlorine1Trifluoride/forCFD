@@ -9,17 +9,18 @@ cases_root = os.path.join("..", "forCFD")
 cases = []
 results = []
 process = []
-
 class Case:
     def __init__ (self, name):
         try:
             self.name=name
+            '''
             if self.name.startswith ("m-"):
                 self.angle = float(self.name[1:-3])
-            else:
-                self.angle = float(self.name[:-3])
-            cases.append(self)
-            cases.sort(key = lambda case:case.angle)
+            else:'''
+            self.angle = float(self.name[:-3])
+            if self.angle>90:
+                cases.append(self)
+                cases.sort(key = lambda case:case.angle)
         except: pass
     def delete(self, folder, file=None):
         source = os.path.join(cases_root, self.name, folder,)
@@ -45,7 +46,7 @@ class Case:
         timelines = []
         drag_list = []
         lift_list = []
-        dat = os.path.join(cases_root, self.name, "postProcessing", "Forces", "500", "forces.dat")
+        dat = os.path.join(cases_root, self.name, "postProcessing", "Forces", "0", "forces.dat")
         with open(dat, "r")as f:
             for line in f:
                 if line.startswith("#") or line.strip() =="":
@@ -73,7 +74,7 @@ class Case:
             "Drag Std": drag_std
         })
         df = pd.DataFrame({
-            'Time': timelines[],
+            'Time': timelines,
             "Drag": drag_arr,
             "Lift": lift_arr
         })
@@ -94,7 +95,7 @@ class Case:
             facecolor = "white",
             )
 
-        plt.savefig(f"single_forces_{self.name}.png", dpi=300, bbox_inches='tight')
+        plt.savefig(f"single_forces_{self.angle}.png", dpi=300, bbox_inches='tight')
         timelines.clear()
         lift_list.clear()
         drag_list.clear()
@@ -137,7 +138,6 @@ def postProcessing():
 def launch(): 
     cases.clear()
     for case in os.listdir(cases_root): case = Case(case)
-
 
 def conc(func):
     def wrapper():
