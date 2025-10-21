@@ -73,7 +73,7 @@ class Case:
             "Drag Std": drag_std
         })
         df = pd.DataFrame({
-            'Time': timelines,
+            'Time': timelines[],
             "Drag": drag_arr,
             "Lift": lift_arr
         })
