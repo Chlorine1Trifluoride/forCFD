@@ -1,8 +1,9 @@
-print("DEATH GAME STARTING...")
+
 import random
 import time
 import HEIL
 def game():
+    print("DEATH GAME STARTING...")
     x = random.randint(1, 9)
     print("한 자리 자연수 중 아무 숫자나 골라보세요")
     choice = input(">>> ")

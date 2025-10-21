@@ -32,16 +32,10 @@ def main():
         "",
         "  [  5  ]  transformPoints",
         "  [  6  ]  foamRun",
-        "",
-        "",
-        "III. PostProcessing",
-        "",
-        "  [  7  ]  TOTAL",
-        "  [  8  ]  SINGLE",
+        "  [  7  ]  postProcessing",
         "",
         ""
         ]
     title = '[ AUTO  PROCESSER ]'
     box(title, list)
-main()
 

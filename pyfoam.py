@@ -5,7 +5,6 @@ import re
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-
 cases_root = os.path.join("..", "forCFD")
 cases = []
 results = []
@@ -21,10 +20,7 @@ class Case:
                 self.angle = float(self.name[:-3])
             cases.append(self)
             cases.sort(key = lambda case:case.angle)
-            print(self.name)
-        except:
-            pass
-
+        except: pass
     def delete(self, folder, file=None):
         source = os.path.join(cases_root, self.name, folder,)
         if file ==None:
@@ -45,7 +41,7 @@ class Case:
             shutil.copy2(os.path.join(target, file), os.path.join(source, file) )
             print(f"Updated {os.path.join(source, file)}")
     def forces(self):
-        global timelines, drag_list, lift_list
+        global results
         timelines = []
         drag_list = []
         lift_list = []
@@ -76,7 +72,6 @@ class Case:
             "Drag Mean": drag_mean,
             "Drag Std": drag_std
         })
-        df = None
         df = pd.DataFrame({
             'Time': timelines,
             "Drag": drag_arr,
@@ -100,10 +95,13 @@ class Case:
             )
 
         plt.savefig(f"single_forces_{self.name}.png", dpi=300, bbox_inches='tight')
+        timelines.clear()
+        lift_list.clear()
+        drag_list.clear()
+        plt.close()
     
     def foamRun(self):
-        try: 
-            p = subprocess.Popen(["foamRun"], cwd = os.path.join(cases_root, self.name))
+        try:  p = subprocess.Popen(["foamRun"], cwd = os.path.join(cases_root, self.name))
         except: print("[오류 발생: foamRun] 이 프로세스는 C:// 경로에 blueCFD-Core-2024를 설치한 상태로 진행해야 합니다.")
     def transformPoints(self):
         try:
@@ -111,16 +109,15 @@ class Case:
             p = subprocess.Popen(command, cwd = os.path.join(cases_root, self.name), shell=True)
         except: print("[오류 발생: tranformPoints] 이 프로세스는 C:// 경로에 blueCFD-Core-2024를 설치한 상태로 진행해야 합니다.")
 
-def totalgraph():
+def postProcessing():
     global results
-    results = []
+    results.clear()
     folders = sorted(cases, key = lambda f:f.angle )
-    for case in folders:
-        case.forces()
+    for case in folders: case.forces()
     df = pd.DataFrame(results)
     df.to_excel("total_forces_10423.xlsx", index=False)
-    plt.plot(df["Case"], df["Lift"], label = "Lift", color = (0.0, 1.0, 0.0, 1.0), linestyle="-", marker="")
-    plt.plot(df["Case"], df["Drag"], label = "Drag", color = (0.0, 1.0, 0.0, 1.0), linestyle="-", marker="")
+    plt.plot(df["Case"], df["Lift Mean"], label = "Lift", color = (0.0, 1.0, 0.0, 1.0), linestyle="-", marker="")
+    plt.plot(df["Case"], df["Drag Mean"], label = "Drag", color = (0.0, 0.0, 0.0, 1.0), linestyle="-", marker="")
     plt.plot(df["Case"], df["Lift Std"], label = "Lift Std", color = (0.0, 1.0, 0.0, 0.4), linestyle=":", marker="")
     plt.plot(df["Case"], df["Drag Std"], label = "Drag Std", color = (0.0, 0.0, 0.0, 0.4), linestyle=":", marker="")
     plt.title(f"Lift and Drag of Human Body [ angle : [ Wind Velocity : 60m/s ]")
@@ -134,11 +131,12 @@ def totalgraph():
         facecolor = "white",
         )
 
-    plt.savefig(f"single_forces_10423.png", dpi=300, bbox_inches='tight')
+    plt.savefig(f"total_forces_10423.png", dpi=300, bbox_inches='tight')
+    plt.close()
 
-def launch():
-    for case in os.listdir(cases_root):
-        case = Case(case)
+def launch(): 
+    cases.clear()
+    for case in os.listdir(cases_root): case = Case(case)
 
 
 def conc(func):
@@ -149,24 +147,14 @@ def conc(func):
         for i in range(0, len(cases), num):
             batch = cases[i : i+num]
             for case in batch:
+                global p
                 func(case)
-            try:
-                for p in process:
-                    p.wait()
-            except:
-                pass
+                process.append(p)
+            try: 
+                for p in process: p.wait()
+            except: pass
     return wrapper
-
 @conc
-def foamRun(case):
-    global p
-    case.foamRun()
-    process.append(p)
+def foamRun(case): case.foamRun()
 @conc
-def transformPoints(case):
-    global p
-    case.transformPoints()
-    process.append(p)
-def singlegraph(case):
-    for case in cases:
-        case.forces()
+def transformPoints(case): case.transformPoints()
