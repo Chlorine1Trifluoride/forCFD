@@ -18,7 +18,7 @@ class Case:
                 self.angle = float(self.name[1:-3])
             else:'''
             self.angle = float(self.name[:-3])
-            if self.angle>90:
+            if self.angle:
                 cases.append(self)
                 cases.sort(key = lambda case:case.angle)
         except: pass
@@ -102,12 +102,15 @@ class Case:
         plt.close()
     
     def foamRun(self):
-        try:  p = subprocess.Popen(["foamRun"], cwd = os.path.join(cases_root, self.name))
+        try: 
+            p = subprocess.Popen(["foamRun"], cwd = os.path.join(cases_root, self.name))
+            return p
         except: print("[오류 발생: foamRun] 이 프로세스는 C:// 경로에 blueCFD-Core-2024를 설치한 상태로 진행해야 합니다.")
     def transformPoints(self):
         try:
             command = f"transformPoints 'Rx={self.angle}' "
             p = subprocess.Popen(command, cwd = os.path.join(cases_root, self.name), shell=True)
+            return p
         except: print("[오류 발생: tranformPoints] 이 프로세스는 C:// 경로에 blueCFD-Core-2024를 설치한 상태로 진행해야 합니다.")
 
 def postProcessing():
@@ -147,9 +150,8 @@ def conc(func):
         for i in range(0, len(cases), num):
             batch = cases[i : i+num]
             for case in batch:
-                global p
-                func(case)
-                process.append(p)
+                p = func(case)
+                if p: process.append(p)
             try: 
                 for p in process: p.wait()
             except: pass
