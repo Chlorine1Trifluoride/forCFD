@@ -5,12 +5,16 @@ import re
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import HEIL
+import pyfoam
+import easterEgg
 
 cases_root = os.path.join ("..", "forCFD")
 
 
 '''
 작업별 프로세스 스크립트
+'''
 '''
 def foamRun():
   case = []
@@ -164,41 +168,38 @@ def deletefolder(foldername):
         
       else:
         print(f"[FATAL ERROR] FILE NOT FOUND: {target}")
-
+'''
         
 repeat = True
 while repeat == True:
   print("""
-  ┌─────────────────────[AUTO PROCESSER]─────────────────────┐
-  │                                                          │
-  │             FINISH IT QUICKLY, MOTHERF**KER!             │
-  │                                                          │
-  │                                                          │
-  │   I.   Case management                                   │
-  │                                                          │
-  │    [  1  ]  Update FILE                                  │
-  │    [  2  ]  Update DIRECTORY                             │
-  │                                                          │
-  │    [  3  ]  Delete FILE                                  │
-  │    [  4  ]  Delete DIRECTORY                             │
-  │                                                          │
-  │                                                          │
-  │   II.  OpenFOAM                                          │
-  │                                                          │
-  │    [  5  ]  transformPoints                              │
-  │    [  6  ]  foamRun                                      │
-  │                                                          │
-  │                                                          │
-  │   III. PostProcessing                                    │
-  │                                                          │
-  │    [  7  ]  TOTAL    Excel                               │
-  │    [  8  ]  TOTAL    Graph                               │
-  │                                                          │
-  │    [  9  ]  SPECIFIC Excel                               │
-  │    [  10 ]  SPECIFIC Graph                               │
-  │                                                          │
-  │                                                          │
-  └──────────────────────────────────────────────────────────┘
+  ┌────────[ AUTO  PROCESSER ]────────┐
+  │                                   │
+  │ FINISH IT QUICKLY, MOTHERF**KER!! │
+  │                                   │
+  │                                   │
+  │  I.   Case management             │
+  │                                   │
+  │    [  1  ]  Update FILE           │
+  │    [  2  ]  Update DIRECTORY      │
+  │                                   │
+  │    [  3  ]  Delete FILE           │
+  │    [  4  ]  Delete DIRECTORY      │
+  │                                   │
+  │                                   │
+  │  II.  OpenFOAM                    │
+  │                                   │
+  │    [  5  ]  transformPoints       │
+  │    [  6  ]  foamRun               │
+  │                                   │
+  │                                   │
+  │  III. PostProcessing              │
+  │                                   │
+  │    [  7  ]  TOTAL                 │
+  │    [  8  ]  SINGLE                │
+  │                                   │
+  │                                   │
+  └───────────────────────────────────┘
   """)
   ans =  input("enter the NUMBER of task you want: ")
   
@@ -243,17 +244,11 @@ while repeat == True:
 
   except ValueError:
     if len(ans) >= 2 and ans[-2:] == "병신":
-        print(f"정답입니다!! {ans[:-2]}은(는) 병신입니다!!!")
-        print(r'''
-        해당 프로그램의 발언은 제작자의 의도와 전혀 무관함을 알려드립니다.
-        본 프로그램에서 누군가에 대해 '병신'이라고 표현하는 것은 사용자의 입력 내용에 의하여 결정됩니다.
-          ┌──────────────────[ CONGRATULATIONS!!! ]──────────────────┐
-          │                   YOU GUESSED  RIGHT!!                   │
-          │                YOU FOUND THE EASTER EGG!!                │
-        f"│      I WILL GIVE YOU {null} DOLLAR AS YOUR PRIZE!!!      │"
-          └──────────────────────────────────────────────────────────┘
-          ''')
-
+      HEIL.easter(ans)
+    elif ans.startswith("HEIL"):
+      HEIL.HITLER()
+    elif ans == "game":
+      easterEgg.game()
     else:
       print("[INVALID CHOICE]")
 

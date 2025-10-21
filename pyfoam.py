@@ -102,10 +102,14 @@ class Case:
         plt.savefig(f"single_forces_{self.name}.png", dpi=300, bbox_inches='tight')
     
     def foamRun(self):
-        p = subprocess.Popen(["foamRun"], cwd = os.path.join(cases_root, self.name))
+        try: 
+            p = subprocess.Popen(["foamRun"], cwd = os.path.join(cases_root, self.name))
+        except: print("[오류 발생: foamRun] 이 프로세스는 C:// 경로에 blueCFD-Core-2024를 설치한 상태로 진행해야 합니다.")
     def transformPoints(self):
-        command = f"transformPoints 'Rx={self.angle}' "
-        p = subprocess.Popen(command, cwd = os.path.join(cases_root, self.name), shell=True)
+        try:
+            command = f"transformPoints 'Rx={self.angle}' "
+            p = subprocess.Popen(command, cwd = os.path.join(cases_root, self.name), shell=True)
+        except: print("[오류 발생: tranformPoints] 이 프로세스는 C:// 경로에 blueCFD-Core-2024를 설치한 상태로 진행해야 합니다.")
 
 def totalgraph():
     global results
@@ -163,6 +167,6 @@ def transformPoints(case):
     global p
     case.transformPoints()
     process.append(p)
-@conc
 def singlegraph(case):
-    case.forces()
+    for case in cases:
+        case.forces()
