@@ -18,7 +18,7 @@ class Case:
                 self.angle = float(self.name[1:-3])
             else:'''
             self.angle = float(self.name[:-3])
-            if self.angle:
+            if self.angle == 95 or self.angle == 135 or self.angle == 140 or self.angle == 145 or self.angle == 150:
                 cases.append(self)
                 cases.sort(key = lambda case:case.angle)
         except: pass
@@ -152,11 +152,10 @@ def conc(func):
             for case in batch:
                 p = func(case)
                 if p: process.append(p)
-            try: 
-                for p in process: p.wait()
-            except: pass
+            for p in process: p.wait()
+            process.clear()
     return wrapper
 @conc
-def foamRun(case): case.foamRun()
+def foamRun(case): return case.foamRun()
 @conc
-def transformPoints(case): case.transformPoints()
+def transformPoints(case): return case.transformPoints()
