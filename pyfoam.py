@@ -10,7 +10,7 @@ cases = []
 results = []
 process = []
 class Case:
-    def __init__ (self, name):
+    def __init__(self, name):
         try:
             self.name=name
             '''
@@ -105,13 +105,13 @@ class Case:
         try: 
             p = subprocess.Popen(["foamRun"], cwd = os.path.join(cases_root, self.name))
             return p
-        except: print("[오류 발생: foamRun] 이 프로세스는 C:// 경로에 blueCFD-Core-2024를 설치한 상태로 진행해야 합니다.")
+        except: print("[오류 발생: foamRun] 이 프로세스는 v11 이상의 OpenFOAM 환경에서 진행해야 합니다.")
     def transformPoints(self):
         try:
             command = f"transformPoints 'Rx={self.angle}' "
             p = subprocess.Popen(command, cwd = os.path.join(cases_root, self.name), shell=True)
             return p
-        except: print("[오류 발생: tranformPoints] 이 프로세스는 C:// 경로에 blueCFD-Core-2024를 설치한 상태로 진행해야 합니다.")
+        except: print("[오류 발생: foamRun] 이 프로세스는 v11 이상의 OpenFOAM 환경에서 진행해야 합니다.")
 
 def postProcessing():
     global results
