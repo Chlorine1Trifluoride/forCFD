@@ -15,6 +15,7 @@ class Case:
             self.name=name
             if self.name.startswith ("m-"):
                 self.angle = float(self.name[1:-3])
+<<<<<<< HEAD
             else:
                 self.angle = float(self.name[:-3])
             if self.angle > 0 and self.angle < 95:
@@ -22,6 +23,13 @@ class Case:
                 casesproc.sort(key = lambda case:case.angle)
             cases.append(self)
             case.sort(key = lambda case:case.angle)
+=======
+            else:'''
+            self.angle = float(self.name[:-3])
+            if self.angle < 95 and self.angle > 25:
+                cases.append(self)
+                cases.sort(key = lambda case:case.angle)
+>>>>>>> d9eff1a (이게  되네...?)
         except: pass
     def delete(self, folder, file=None):
         source = os.path.join(cases_root, self.name, folder,)
