@@ -18,7 +18,7 @@ class Case:
                 self.angle = float(self.name[1:-3])
             else:
                 self.angle = float(self.name[:-3])
-            if self.angle > 50 and self.angle < 95:
+            if self.angle<0 and self.angle>-150:
                 casesproc.append(self)
                 casesproc.sort(key = lambda case:case.angle)
             cases.append(self)
@@ -73,16 +73,19 @@ class Case:
             "Lift Mean": lift_mean,
             "Lift Std": lift_std,
             "Drag Mean": drag_mean,
-            "Drag Std": drag_std
+            "Drag Std": drag_std,
+            "Gravity" : 686
         })
         df = pd.DataFrame({
             'Time': timelines,
             "Drag": drag_arr,
-            "Lift": lift_arr
+            "Lift": lift_arr,
+            "Gravity": 686
         })
         df.to_excel(f"single_forces_{self.name}.xlsx", index=False)
        
         plt.plot(df["Time"], df["Drag"], label = "Drag", color = (0.0, 0.0, 0.0, 1.0), linestyle="-", marker="")
+        plt.plot(df["Time"], df["Gravity"], label = "Gravity", color = (0.0, 0.0, 1.0, 0.7), linestyle=":", marker="")
         plt.plot(df["Time"], df["Lift"], label = "Lift", color = (0.0, 1.0, 0.0, 1.0), linestyle="-", marker="")
         plt.title(f"Lift and Drag of Human Body [ angle : {self.angle}deg ] [ Wind Velocity : 60m/s ]")
         plt.xticks([])
@@ -125,6 +128,7 @@ def postProcessing():
     plt.plot(df["Case"], df["Drag Std"], label = "Drag Std", color = (0.0, 0.0, 0.0, 0.4), linestyle=":", marker="")
     plt.plot(df["Case"], df["Lift Std"], label = "Lift Std", color = (0.0, 1.0, 0.0, 0.4), linestyle=":", marker="")
     plt.plot(df["Case"], df["Drag Mean"], label = "Drag", color = (0.0, 0.0, 0.0, 1.0), linestyle="-", marker="")
+    plt.plot(df["Time"], df["Gravity"], label = "Gravity", color = (0.0, 0.0, 1.0, 0.7), linestyle=":", marker="")
     plt.plot(df["Case"], df["Lift Mean"], label = "Lift", color = (0.0, 1.0, 0.0, 1.0), linestyle="-", marker="")
     plt.title(f"Lift and Drag of Human Body [ angle : [ Wind Velocity : 60m/s ]")
     plt.xlabel("Angle        [  deg  ]")
