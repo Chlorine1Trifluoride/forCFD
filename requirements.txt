@@ -1,6 +1,5 @@
-numpy<2
 pandas
 matplotlib
 openpyxl
 scipy
-colorama
+numpy<2
