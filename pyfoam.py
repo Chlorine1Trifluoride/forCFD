@@ -13,14 +13,15 @@ class Case:
     def __init__(self, name):
         try:
             self.name=name
-            '''
             if self.name.startswith ("m-"):
                 self.angle = float(self.name[1:-3])
-            else:'''
-            self.angle = float(self.name[:-3])
-            if self.angle == 95 or self.angle == 135 or self.angle == 140 or self.angle == 145 or self.angle == 150:
-                cases.append(self)
-                cases.sort(key = lambda case:case.angle)
+            else:
+                self.angle = float(self.name[:-3])
+            if self.angle > 0 and self.angle < 95:
+                casesproc.append(self)
+                casesproc.sort(key = lambda case:case.angle)
+            cases.append(self)
+            case.sort(key = lambda case:case.angle)
         except: pass
     def delete(self, folder, file=None):
         source = os.path.join(cases_root, self.name, folder,)
@@ -80,8 +81,8 @@ class Case:
         })
         df.to_excel(f"single_forces_{self.name}.xlsx", index=False)
        
-        plt.plot(df["Time"], df["Lift"], label = "Lift", color = (0.0, 1.0, 0.0, 1.0), linestyle="-", marker="")
         plt.plot(df["Time"], df["Drag"], label = "Drag", color = (0.0, 0.0, 0.0, 1.0), linestyle="-", marker="")
+        plt.plot(df["Time"], df["Lift"], label = "Lift", color = (0.0, 1.0, 0.0, 1.0), linestyle="-", marker="")
         plt.title(f"Lift and Drag of Human Body [ angle : {self.angle}deg ] [ Wind Velocity : 60m/s ]")
         plt.xticks([])
         plt.grid(axis='x', visible=False)
@@ -120,10 +121,10 @@ def postProcessing():
     for case in folders: case.forces()
     df = pd.DataFrame(results)
     df.to_excel("total_forces_10423.xlsx", index=False)
-    plt.plot(df["Case"], df["Lift Mean"], label = "Lift", color = (0.0, 1.0, 0.0, 1.0), linestyle="-", marker="")
-    plt.plot(df["Case"], df["Drag Mean"], label = "Drag", color = (0.0, 0.0, 0.0, 1.0), linestyle="-", marker="")
-    plt.plot(df["Case"], df["Lift Std"], label = "Lift Std", color = (0.0, 1.0, 0.0, 0.4), linestyle=":", marker="")
     plt.plot(df["Case"], df["Drag Std"], label = "Drag Std", color = (0.0, 0.0, 0.0, 0.4), linestyle=":", marker="")
+    plt.plot(df["Case"], df["Lift Std"], label = "Lift Std", color = (0.0, 1.0, 0.0, 0.4), linestyle=":", marker="")
+    plt.plot(df["Case"], df["Drag Mean"], label = "Drag", color = (0.0, 0.0, 0.0, 1.0), linestyle="-", marker="")
+    plt.plot(df["Case"], df["Lift Mean"], label = "Lift", color = (0.0, 1.0, 0.0, 1.0), linestyle="-", marker="")
     plt.title(f"Lift and Drag of Human Body [ angle : [ Wind Velocity : 60m/s ]")
     plt.xlabel("Angle        [  deg  ]")
     plt.ylabel("Force        [   N   ]")
@@ -147,8 +148,8 @@ def conc(func):
         global process
         process = []
         num = int(input("Concurrency level: "))
-        for i in range(0, len(cases), num):
-            batch = cases[i : i+num]
+        for i in range(0, len(casesproc), num):
+            batch = casesproc[i : i+num]
             for case in batch:
                 p = func(case)
                 if p: process.append(p)
