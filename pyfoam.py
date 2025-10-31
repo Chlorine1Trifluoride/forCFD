@@ -18,7 +18,7 @@ class Case:
                 self.angle = float(self.name[1:-3])
             else:
                 self.angle = float(self.name[:-3])
-            if self.angle<0 and self.angle>-150:
+            if self.angle<0 and self.angle>-135:
                 casesproc.append(self)
                 casesproc.sort(key = lambda case:case.angle)
             cases.append(self)
