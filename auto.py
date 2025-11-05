@@ -1,5 +1,3 @@
-try: import HEIL, easterEgg
-except: pass
 import pyfoam, menu
 pyfoam.launch()
 ans = None
@@ -26,11 +24,6 @@ try:
     pyfoam.foamRun()
   elif choice ==     7: 
     pyfoam.postProcessing()
-  elif choice ==     100: print("뭐 병신아")
   else: print("[INVALID CHOICE]")
-except ValueError:
-  if len(ans) >= 2 and ans[-2:] == "병신": HEIL.easter(ans)
-  elif ans.startswith("HEIL"): HEIL.HITLER()
-  elif ans == "game": easterEgg.game()
-  else: print("[INVALID CHOICE]")
+except ValueError: print("[INVALID CHOICE]")
 

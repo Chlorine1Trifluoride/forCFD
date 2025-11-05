@@ -1,5 +1,3 @@
-try: import HEIL
-except: pass
 def boxheader(title):
     padding = int((35-len(title))/2)
     print('┌'+'─'*padding+title+padding*'─'+'┐')
@@ -9,10 +7,6 @@ def boxfooter():
     print("└───────────────────────────────────┘")
 def box(title, list):
     boxheader(title)
-    try: 
-        boxcontent('')
-        HEIL.header()
-    except: pass
     for string in list:
         boxcontent(string)
     boxfooter()
