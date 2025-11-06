@@ -5,7 +5,7 @@ import re
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-cases_root = os.path.join('..', 'p1')
+cases_root = os.path.join('..', 'p2')
 cases = []
 casesproc = []
 results = []
@@ -14,15 +14,12 @@ class Case:
     def __init__(self, name):
         try:
             self.name=name
-            if self.name.startswith ("m-"):
-                self.angle = float(self.name[1:-3])
-            else:
-                self.angle = float(self.name[:-3])
-            if self.angle<0 and self.angle>-25:
+            self.velocity = float(self.name[:-3])
+            if self.velocity>0:
                 casesproc.append(self)
-                casesproc.sort(key = lambda case:case.angle)
+                casesproc.sort(key = lambda case:case.velocity)
             cases.append(self)
-            cases.sort(key = lambda case:case.angle)
+            cases.sort(key = lambda case:case.velocity)
         except: pass
     def delete(self, folder, file=None):
         source = os.path.join(cases_root, self.name, folder,)
@@ -69,7 +66,7 @@ class Case:
         drag_std = np.std(drag_arr)
         lift_std = np.std(lift_arr)
         results.append({
-            "Case": self.angle,
+            "Case": self.velocity,
             "Lift Mean": lift_mean,
             "Lift Std": lift_std,
             "Drag Mean": drag_mean,
@@ -87,7 +84,7 @@ class Case:
         plt.plot(df["Time"], df["Drag"], label = "Drag", color = (0.0, 0.0, 0.0, 1.0), linestyle="-", marker="")
         plt.plot(df["Time"], df["Gravity"], label = "Gravity", color = (0.0, 0.0, 1.0, 0.7), linestyle=":", marker="")
         plt.plot(df["Time"], df["Lift"], label = "Lift", color = (0.0, 1.0, 0.0, 1.0), linestyle="-", marker="")
-        plt.title(f"Lift and Drag of Human Body [ angle : {self.angle}deg ] [ Wind Velocity : 60m/s ]")
+        plt.title(f"Lift and Drag of Human Body [ velocity : {self.velocity}deg ] [ Wind Velocity : 60m/s ]")
         plt.xticks([])
         plt.grid(axis='x', visible=False)
         plt.xlabel("Time         [   s   ]")
@@ -100,7 +97,7 @@ class Case:
             facecolor = "white",
             )
 
-        plt.savefig(f"single_forces_{self.angle}.png", dpi=300, bbox_inches='tight')
+        plt.savefig(f"single_forces_{self.velocity}.png", dpi=300, bbox_inches='tight')
         timelines.clear()
         lift_list.clear()
         drag_list.clear()
@@ -113,7 +110,7 @@ class Case:
         except: print("[오류 발생: foamRun] 이 프로세스는 v11 이상의 OpenFOAM 환경에서 진행해야 합니다.")
     def transformPoints(self):
         try:
-            command = f"transformPoints 'Rx={self.angle}' "
+            command = f"transformPoints 'Rx={self.velocity}' "
             p = subprocess.Popen(command, cwd = os.path.join(cases_root, self.name), shell=True)
             return p
         except: print("[오류 발생: foamRun] 이 프로세스는 v11 이상의 OpenFOAM 환경에서 진행해야 합니다.")
@@ -121,7 +118,7 @@ class Case:
 def postProcessing():
     global results
     results.clear()
-    folders = sorted(cases, key = lambda f:f.angle )
+    folders = sorted(cases, key = lambda f:f.velocity )
     for case in folders: case.forces()
     df = pd.DataFrame(results)
     df.to_excel("total_forces_10423.xlsx", index=False)
@@ -130,8 +127,8 @@ def postProcessing():
     plt.plot(df["Case"], df["Drag Mean"], label = "Drag", color = (0.0, 0.0, 0.0, 1.0), linestyle="-", marker="")
     plt.plot(df["Time"], df["Gravity"], label = "Gravity", color = (0.0, 0.0, 1.0, 0.7), linestyle=":", marker="")
     plt.plot(df["Case"], df["Lift Mean"], label = "Lift", color = (0.0, 1.0, 0.0, 1.0), linestyle="-", marker="")
-    plt.title(f"Lift and Drag of Human Body [ angle : [ Wind Velocity : 60m/s ]")
-    plt.xlabel("Angle        [  deg  ]")
+    plt.title(f"Lift and Drag of Human Body [ velocity : [ Wind Velocity : 60m/s ]")
+    plt.xlabel("velocity        [  deg  ]")
     plt.ylabel("Force        [   N   ]")
     plt.grid(True)
     plt.legend(
