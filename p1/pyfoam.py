@@ -53,7 +53,7 @@ class Case:
             for line in f:
                 if line.startswith("#") or line.strip() =="":
                     continue
-                timeline = line[:7].strip()
+                timeline = float(line[:4].strip())
                 vectors = re.findall(r"\(([^()]+)\)", line)
                 f_a = vectors[0].strip().split()
                 f_b = vectors[1].strip().split()
@@ -68,19 +68,21 @@ class Case:
         lift_mean = np.mean(lift_arr)
         drag_std = np.std(drag_arr)
         lift_std = np.std(lift_arr)
+        timelines_arr = np.array(timelines)
+        gravity_arr = np.full_like(timelines_arr, 686)
         results.append({
             "Case": self.angle,
             "Lift Mean": lift_mean,
             "Lift Std": lift_std,
             "Drag Mean": drag_mean,
             "Drag Std": drag_std,
-            "Gravity" : 686
+            "Gravity" : gravity_arr
         })
         df = pd.DataFrame({
-            'Time': timelines,
+            "Time": timelines_arr,
             "Drag": drag_arr,
             "Lift": lift_arr,
-            "Gravity": 686
+            "Gravity": gravity_arr
         })
         df.to_excel(f"single_forces_{self.name}.xlsx", index=False)
        
@@ -128,7 +130,7 @@ def postProcessing():
     plt.plot(df["Case"], df["Drag Std"], label = "Drag Std", color = (0.0, 0.0, 0.0, 0.4), linestyle=":", marker="")
     plt.plot(df["Case"], df["Lift Std"], label = "Lift Std", color = (0.0, 1.0, 0.0, 0.4), linestyle=":", marker="")
     plt.plot(df["Case"], df["Drag Mean"], label = "Drag", color = (0.0, 0.0, 0.0, 1.0), linestyle="-", marker="")
-    plt.plot(df["Time"], df["Gravity"], label = "Gravity", color = (0.0, 0.0, 1.0, 0.7), linestyle=":", marker="")
+    plt.plot(df["Case"], df["Gravity"], label = "Gravity", color = (0.0, 0.0, 1.0, 0.7), linestyle=":", marker="")
     plt.plot(df["Case"], df["Lift Mean"], label = "Lift", color = (0.0, 1.0, 0.0, 1.0), linestyle="-", marker="")
     plt.title(f"Lift and Drag of Human Body [ angle : [ Wind Velocity : 60m/s ]")
     plt.xlabel("Angle        [  deg  ]")
