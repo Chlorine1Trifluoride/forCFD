@@ -52,6 +52,7 @@ class Case:
                 if line.startswith("#") or line.strip() =="":
                     continue
                 timeline = float(line[:4].strip())
+                if timeline<1:continue
                 vectors = re.findall(r"\(([^()]+)\)", line)
                 f_a = vectors[0].strip().split()
                 f_b = vectors[1].strip().split()
