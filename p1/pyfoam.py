@@ -88,9 +88,9 @@ class Case:
 
         df.to_excel(f"single_forces_{self.name}.xlsx", index=False)
 
-        plt.plot(timelines_arr, drag_arr, label = "Drag", color = (0.0, 0.0, 0.0, 1.0), linestyle="-", marker="")
+        plt.plot(timelines_arr, drag_arr, label = "Drag", color = (0.0, 0.0, 0.0, 0.5), linestyle="-", marker="")
         plt.axhline(y=float(686), label = "Gravity", color = (0.0, 0.0, 1.0, 0.7), linestyle=":")
-        plt.plot(timelines_arr, lift_arr, label = "Lift", color = (0.0, 1.0, 0.0, 1.0), linestyle="-", marker="")
+        plt.plot(timelines_arr, lift_arr, label = "Lift", color = (1.0, 0.0, 0.0, 1.0), linestyle="-", marker="")
 
         plt.title(f"Lift and Drag of Human Body [ angle : {self.angle}deg ] [ Wind Velocity : 60m/s ]")
         plt.xticks([])
@@ -130,11 +130,11 @@ def postProcessing():
     for case in folders: case.forces()
     df = pd.DataFrame(results)
     df.to_excel("total_forces_10423.xlsx", index=False)
-    plt.plot(r_case, r_drag_std, label = "Drag Std", color = (0.0, 0.0, 0.0, 0.4), linestyle=":", marker="")
-    plt.plot(r_case, r_lift_std, label = "Lift Std", color = (0.0, 1.0, 0.0, 0.4), linestyle=":", marker="")
-    plt.plot(r_case, r_drag_mean, label = "Drag", color = (0.0, 0.0, 0.0, 1.0), linestyle="-", marker="")
+    plt.plot(r_case, r_drag_std, label = "Drag Std", color = (0.0, 0.0, 0.0, 0.3), linestyle=":", marker="")
+    plt.plot(r_case, r_lift_std, label = "Lift Std", color = (1.0, 0.0, 0.0, 0.4), linestyle=":", marker="")
+    plt.plot(r_case, r_drag_mean, label = "Drag", color = (0.0, 0.0, 0.0, 0.5), linestyle="-", marker="")
     plt.axhline(y=float(686), label = "Gravity", color = (0.0, 0.0, 1.0, 0.7), linestyle=":")
-    plt.plot(r_case, r_lift_mean, label = "Lift", color = (0.0, 1.0, 0.0, 1.0), linestyle="-", marker="")
+    plt.plot(r_case, r_lift_mean, label = "Lift", color = (1.0, 0.0, 0.0, 1.0), linestyle="-", marker="")
     plt.title(f"Lift and Drag of Human Body [ angle : [ Wind Velocity : 60m/s ]")
     plt.xlabel("Angle        [  deg  ]")
     plt.ylabel("Force        [   N   ]")
