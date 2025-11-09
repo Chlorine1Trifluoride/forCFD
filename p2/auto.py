@@ -18,8 +18,6 @@ try:
         for case in pyfoam.cases: case.update(foldername)
       elif choice == 4: 
         for case in pyfoam.cases: case.delete(foldername)
-  elif choice ==     5: 
-    pyfoam.transformPoints()
   elif choice ==     6: 
     pyfoam.foamRun()
   elif choice ==     7: 

@@ -1,4 +1,4 @@
-import pyfoam, menu
+import check.pyfoam as pyfoam, menu
 pyfoam.launch()
 ans = None
 menu.main()
