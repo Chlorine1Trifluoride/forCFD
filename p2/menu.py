@@ -27,7 +27,7 @@ def main():
         "",
         "  [  5  ]  transformPoints",
         "  [  6  ]  foamRun",
-        "  [  7  ]  postProcessing",
+        "  [  7  ]  PARALLEL foamRun",
         "",
         ""
         ]

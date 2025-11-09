@@ -40,6 +40,30 @@ class Case:
         elif os.path.exists(os.path.join(target, file)):
             shutil.copy2(os.path.join(target, file), os.path.join(source, file) )
             print(f"Updated {os.path.join(source, file)}")
+    def changeU(self):
+        with open(os.path.join(cases_root,self.name,"0","U"), "r") as f:
+            lines = f.readlines()
+        with open(os.path.join(cases_root,self.name,"0","U"), "w") as f:
+            for line in lines:
+                if "internalField   uniform (0 60 0);" in line:
+                    f.write(f"internalField   uniform (0 {self.velocity} 0);\n")
+                elif "        value   uniform (0 60 0);" in line:
+                    f.write(f"        value   uniform (0 {self.velocity} 0);\n")
+                else: f.write(line)
+    
+    def decompose(self, num):
+        with open (os.path.join(cases_root,self.name,"system","decomposeParDict"), "r") as f:
+            lines = f.readlines()
+        with open (os.path.join(cases_root,self.name,"system","decomposeParDict"), "w") as f:
+            for line in lines:
+                if "numberOfSubdomains" in line:
+                    f.write(f"numberOfSubdomains  {num};\n")
+                else:f.write(line)
+        try: 
+            subprocess.Popen(["decomposePar"], cwd = os.path.join(cases_root, self.name))
+        except: print("[오류 발생: foamRun] 이 프로세스는 v11 이상의 OpenFOAM 환경에서 진행해야 합니다.")
+        p=subprocess.Popen(["mpirun","-np",str(num),"foamRun","-parallel"], cwd = os.path.join(cases_root,self.name))
+        return p
     def forces(self):
         global results
         timelines = []
@@ -108,12 +132,6 @@ class Case:
             p = subprocess.Popen(["foamRun"], cwd = os.path.join(cases_root, self.name))
             return p
         except: print("[오류 발생: foamRun] 이 프로세스는 v11 이상의 OpenFOAM 환경에서 진행해야 합니다.")
-    def transformPoints(self):
-        try:
-            command = f"transformPoints 'Rx={self.velocity}' "
-            p = subprocess.Popen(command, cwd = os.path.join(cases_root, self.name), shell=True)
-            return p
-        except: print("[오류 발생: foamRun] 이 프로세스는 v11 이상의 OpenFOAM 환경에서 진행해야 합니다.")
 
 def postProcessing():
     global results
@@ -145,11 +163,12 @@ def launch():
     cases.clear()
     for case in os.listdir(cases_root): case = Case(case)
 
-def conc(func):
+def batch(func):
     def wrapper():
-        global process
+        global process, temp
         process = []
-        num = int(input("Concurrency level: "))
+        temp = 0
+        num = int(input("Batch Size: "))
         for i in range(0, len(casesproc), num):
             batch = casesproc[i : i+num]
             for case in batch:
@@ -157,8 +176,14 @@ def conc(func):
                 if p: process.append(p)
             for p in process: p.wait()
             process.clear()
+        temp = None
     return wrapper
-@conc
+@batch
 def foamRun(case): return case.foamRun()
-@conc
-def transformPoints(case): return case.transformPoints()
+@batch
+def parallelRun(case,sub):
+    global temp
+    if temp == 0:sub = int(input("Number Of Subdomains: "))
+    else: 
+        temp+=1
+    return case.decompose(sub)

@@ -21,7 +21,7 @@ try:
   elif choice ==     6: 
     pyfoam.foamRun()
   elif choice ==     7: 
-    pyfoam.postProcessing()
+    pyfoam.parallelRun()
   else: print("[INVALID CHOICE]")
 except ValueError: print("[INVALID CHOICE]")
 
