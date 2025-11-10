@@ -192,7 +192,7 @@ def parallelRun():
             for p in process: p.wait()
             process.clear()
             for case in batch:
-                p = case.decompose(sub)
+                p = case.decomposeRun(sub)
                 if p: process.append(p)
             for p in process: p.wait()
             process.clear()
