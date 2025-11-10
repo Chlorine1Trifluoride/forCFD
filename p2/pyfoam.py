@@ -60,7 +60,8 @@ class Case:
                     f.write(f"numberOfSubdomains  {num};\n")
                 else:f.write(line)
         try: 
-            subprocess.Popen(["decomposePar"], cwd = os.path.join(cases_root, self.name))
+            q = subprocess.Popen(["decomposePar"], cwd = os.path.join(cases_root, self.name))
+            q.wait
         except: print("[오류 발생: foamRun] 이 프로세스는 v11 이상의 OpenFOAM 환경에서 진행해야 합니다.")
         p=subprocess.Popen(["mpirun","-np",str(num),"foamRun","-parallel"], cwd = os.path.join(cases_root,self.name))
         return p
@@ -180,10 +181,15 @@ def batch(func):
     return wrapper
 @batch
 def foamRun(case): return case.foamRun()
-@batch
-def parallelRun(case,sub):
-    global temp
-    if temp == 0:sub = int(input("Number Of Subdomains: "))
-    else: 
-        temp+=1
-    return case.decompose(sub)
+def parallelRun():
+        global process
+        process = []
+        num = int(input("Batch Size: "))
+        sub = int(input("Number Of Subdomains: "))
+        for i in range(0, len(casesproc), num):
+            batch = casesproc[i : i+num]
+            for case in batch:
+                p = case.decompose(sub)
+                if p: process.append(p)
+            for p in process: p.wait()
+            process.clear()
