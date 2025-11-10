@@ -113,7 +113,7 @@ class Case:
         plt.axhline(y=float(686), label = "Gravity", color = (0.0, 0.0, 1.0, 0.7), linestyle=":")
         plt.plot(timelines_arr, lift_arr, label = "Lift", color = (1.0, 0.0, 0.0, 1.0), linestyle="-", marker="")
 
-        plt.title(f"Lift and Drag of Human Body [ angle : 50.00deg ] [ Wind Velocity : {self.velocity}m/s ]")
+        plt.title(f"Lift and Drag of Human Body [ angle : 50.00deg ] [ Wind Velocity : {self.name} ]")
         plt.xticks([])
         plt.grid(axis='x', visible=False)
         plt.xlabel("Time         [   s   ]")
@@ -126,7 +126,7 @@ class Case:
             facecolor = "white",
             )
 
-        plt.savefig(f"single_forces_{self.velocity}m/s.png", dpi=300, bbox_inches='tight')
+        plt.savefig(f"single_forces_{self.name}.png", dpi=300, bbox_inches='tight')
         timelines.clear()
         lift_list.clear()
         drag_list.clear()
