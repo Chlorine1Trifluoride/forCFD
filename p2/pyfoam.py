@@ -60,7 +60,7 @@ class Case:
                     f.write(f"numberOfSubdomains  {num};\n")
                 else:f.write(line)
         try: 
-            subprocess.Run(["decomposePar"], cwd = os.path.join(cases_root, self.name))
+            subprocess.run(["decomposePar"], cwd = os.path.join(cases_root, self.name))
         except: print("[오류 발생: foamRun] 이 프로세스는 v11 이상의 OpenFOAM 환경에서 진행해야 합니다.")
         p = subprocess.Popen(["mpirun","-np",str(num),"foamRun","-parallel"], cwd = os.path.join(cases_root,self.name))
         return p
