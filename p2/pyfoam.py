@@ -6,10 +6,8 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 cases_root = os.path.join('..', 'p2')
-cases = []
-casesproc = []
-results = []
-process = []
+cases=[];casesproc=[];process=[];results=[]
+r_case=[]; r_lift_mean=[]; r_lift_std=[]; r_drag_mean=[]; r_drag_std=[]
 class Case:
     def __init__(self, name):
         try:
@@ -74,7 +72,8 @@ class Case:
             for line in f:
                 if line.startswith("#") or line.strip() =="":
                     continue
-                timeline = line[:7].strip()
+                timeline = float(line[:4].strip())
+                if timeline<1:continue
                 vectors = re.findall(r"\(([^()]+)\)", line)
                 f_a = vectors[0].strip().split()
                 f_b = vectors[1].strip().split()
@@ -89,25 +88,31 @@ class Case:
         lift_mean = np.mean(lift_arr)
         drag_std = np.std(drag_arr)
         lift_std = np.std(lift_arr)
+        timelines_arr = np.array(timelines)
+        r_case.append(self.velocity)
+        r_lift_mean.append(lift_mean)
+        r_lift_std.append(lift_std)
+        r_drag_mean.append(drag_mean)
+        r_drag_std.append(drag_std)
         results.append({
             "Case": self.velocity,
             "Lift Mean": lift_mean,
             "Lift Std": lift_std,
             "Drag Mean": drag_mean,
             "Drag Std": drag_std,
-            "Gravity" : 686
         })
         df = pd.DataFrame({
-            'Time': timelines,
+            "Time": timelines_arr,
             "Drag": drag_arr,
             "Lift": lift_arr,
-            "Gravity": 686
         })
+
         df.to_excel(f"single_forces_{self.name}.xlsx", index=False)
-       
-        plt.plot(df["Time"], df["Drag"], label = "Drag", color = (0.0, 0.0, 0.0, 1.0), linestyle="-", marker="")
-        plt.plot(df["Time"], df["Gravity"], label = "Gravity", color = (0.0, 0.0, 1.0, 0.7), linestyle=":", marker="")
-        plt.plot(df["Time"], df["Lift"], label = "Lift", color = (0.0, 1.0, 0.0, 1.0), linestyle="-", marker="")
+
+        plt.plot(timelines_arr, drag_arr, label = "Drag", color = (0.0, 0.0, 0.0, 0.5), linestyle="-", marker="")
+        plt.axhline(y=float(686), label = "Gravity", color = (0.0, 0.0, 1.0, 0.7), linestyle=":")
+        plt.plot(timelines_arr, lift_arr, label = "Lift", color = (1.0, 0.0, 0.0, 1.0), linestyle="-", marker="")
+
         plt.title(f"Lift and Drag of Human Body [ angle : 50.00deg ] [ Wind Velocity : {self.velocity}m/s ]")
         plt.xticks([])
         plt.grid(axis='x', visible=False)
@@ -121,7 +126,7 @@ class Case:
             facecolor = "white",
             )
 
-        plt.savefig(f"single_forces_{self.velocity}.png", dpi=300, bbox_inches='tight')
+        plt.savefig(f"single_forces_{self.velocity}m/s.png", dpi=300, bbox_inches='tight')
         timelines.clear()
         lift_list.clear()
         drag_list.clear()
@@ -133,6 +138,7 @@ class Case:
             return p
         except: print("[오류 발생: foamRun] 이 프로세스는 v11 이상의 OpenFOAM 환경에서 진행해야 합니다.")
 
+
 def postProcessing():
     global results
     results.clear()
@@ -140,11 +146,11 @@ def postProcessing():
     for case in folders: case.forces()
     df = pd.DataFrame(results)
     df.to_excel("total_forces_10423.xlsx", index=False)
-    plt.plot(df["Case"], df["Drag Std"], label = "Drag Std", color = (0.0, 0.0, 0.0, 0.4), linestyle=":", marker="")
-    plt.plot(df["Case"], df["Lift Std"], label = "Lift Std", color = (0.0, 1.0, 0.0, 0.4), linestyle=":", marker="")
-    plt.plot(df["Case"], df["Drag Mean"], label = "Drag", color = (0.0, 0.0, 0.0, 1.0), linestyle="-", marker="")
-    plt.plot(df["Time"], df["Gravity"], label = "Gravity", color = (0.0, 0.0, 1.0, 0.7), linestyle=":", marker="")
-    plt.plot(df["Case"], df["Lift Mean"], label = "Lift", color = (0.0, 1.0, 0.0, 1.0), linestyle="-", marker="")
+    plt.plot(r_case, r_drag_std, label = "Drag Std", color = (0.0, 0.0, 0.0, 0.3), linestyle=":", marker="")
+    plt.plot(r_case, r_lift_std, label = "Lift Std", color = (1.0, 0.0, 0.0, 0.4), linestyle=":", marker="")
+    plt.plot(r_case, r_drag_mean, label = "Drag", color = (0.0, 0.0, 0.0, 0.5), linestyle="-", marker="")
+    plt.axhline(y=float(686), label = "Gravity", color = (0.0, 0.0, 1.0, 0.7), linestyle=":")
+    plt.plot(r_case, r_lift_mean, label = "Lift", color = (1.0, 0.0, 0.0, 1.0), linestyle="-", marker="")
     plt.title(f"Lift and Drag of Human Body [ angle : 50.00deg ]")
     plt.xlabel("velocity     [  m/s  ]")
     plt.ylabel("Force        [   N   ]")

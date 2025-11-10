@@ -25,7 +25,7 @@ def main():
         "",
         "II.  OpenFOAM",
         "",
-        "  [  5  ]  transformPoints",
+        "  [  5  ]  postProcessing",
         "  [  6  ]  foamRun",
         "  [  7  ]  PARALLEL foamRun",
         "",
