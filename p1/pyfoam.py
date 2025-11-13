@@ -23,18 +23,22 @@ class Case:
             cases.sort(key = lambda case:case.angle)
         except: pass
     def delete(self, folder, file=None):
-        source = os.path.join(cases_root, self.name, folder,)
+        try:source = os.path.join(cases_root, self.name, folder,)
+        except TypeError: 
+            if file!=None:source = os.path.join(cases_root,self.name)
         if file ==None:
             shutil.rmtree(source)
             print(f"Deleted {source}")
         elif os.path.exists(os.path.join(source, file)):
             os.remove(os.path.join(source, file))
             print(f"Deleted {os.path.join(source, file)}")
+        
 
     def update(self, rawfolder, file=None):
         folder = str(rawfolder)
-        target = os.path.join(cases_root, "CaseTemplate", folder)
-        source = os.path.join(cases_root, self.name, folder)
+        try: target = os.path.join(cases_root, "CaseTemplate", folder); source = os.path.join(cases_root, self.name, folder)
+        except TypeError: 
+            if file!=None:target = os.path.join(cases_root, "CaseTemplate"); source = os.path.join(cases_root, self.name)
         if file==None and os.path.exists(target):
             shutil.copytree(target, source, dirs_exist_ok=True)
             print(f"Updated {source}")
@@ -153,6 +157,19 @@ def launch():
     cases.clear()
     for case in os.listdir(cases_root): case = Case(case)
 
+def parallelRun():
+        global process
+        process = []
+        num = int(input("Batch Size: "))
+        sub = int(input("Number Of Subdomains: "))
+        for i in range(0, len(casesproc), num):
+            batch = casesproc[i : i+num]
+            for case in batch:
+                p = case.decompose(sub)
+                if p: process.append(p)
+            for p in process: p.wait()
+            process.clear()
+
 def conc(func):
     def wrapper():
         global process
@@ -166,6 +183,7 @@ def conc(func):
             for p in process: p.wait()
             process.clear()
     return wrapper
+
 @conc
 def foamRun(case): return case.foamRun()
 @conc

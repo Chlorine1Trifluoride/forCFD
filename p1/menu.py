@@ -21,13 +21,15 @@ def main():
         "",
         "  [  3  ]  Delete FILE",
         "  [  4  ]  Delete DIRECTORY",
+        ''
+        '  [  5  ]  initialize'
         "",
         "",
         "II.  OpenFOAM",
         "",
-        "  [  5  ]  transformPoints",
-        "  [  6  ]  foamRun",
-        "  [  7  ]  postProcessing",
+        "  [  6  ]  postProcessing",
+        "  [  7  ]  foamRun",
+        "  [  8  ]  PARALLEL foamRun",
         "",
         ""
         ]

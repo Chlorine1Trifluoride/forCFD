@@ -20,24 +20,29 @@ class Case:
             cases.sort(key = lambda case:case.velocity)
         except: pass
     def delete(self, folder, file=None):
-        source = os.path.join(cases_root, self.name, folder,)
+        try:source = os.path.join(cases_root, self.name, folder,)
+        except TypeError: 
+            if file!=None:source = os.path.join(cases_root,self.name)
         if file ==None:
             shutil.rmtree(source)
             print(f"Deleted {source}")
         elif os.path.exists(os.path.join(source, file)):
             os.remove(os.path.join(source, file))
             print(f"Deleted {os.path.join(source, file)}")
+        
 
     def update(self, rawfolder, file=None):
         folder = str(rawfolder)
-        target = os.path.join(cases_root, "CaseTemplate", folder)
-        source = os.path.join(cases_root, self.name, folder)
+        try: target = os.path.join(cases_root, "CaseTemplate", folder); source = os.path.join(cases_root, self.name, folder)
+        except TypeError: 
+            if file!=None:target = os.path.join(cases_root, "CaseTemplate"); source = os.path.join(cases_root, self.name)
         if file==None and os.path.exists(target):
             shutil.copytree(target, source, dirs_exist_ok=True)
             print(f"Updated {source}")
         elif os.path.exists(os.path.join(target, file)):
             shutil.copy2(os.path.join(target, file), os.path.join(source, file) )
             print(f"Updated {os.path.join(source, file)}")
+        
     def changeU(self):
         with open(os.path.join(cases_root,self.name,"0","U"), "r") as f:
             lines = f.readlines()
