@@ -123,6 +123,8 @@ def launch():
     for case in os.listdir(cases_root): case = Case(case)
 def foamRun():
     for case in cases:case.foamRun()
+def transformPoints():
+    for case in cases:case.transformPoints()
 def parallelRun():
     num = input("Enter Number of Subdomains: ")
     for case in cases:case.decompose(num)

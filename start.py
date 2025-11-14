@@ -1,9 +1,83 @@
+
+#필수 pip 패키지 설치
 import subprocess, os, sys,shutil
 def runpip(cmd): subprocess.run([sys.executable, "-m", "pip"] + cmd.split(), shell=False)
 print("[ start ] Setting up e   nvironment for OpenFOAM automatic tasks...")
 runpip("--version")
 runpip("install -r requirements.txt")
 if input('Press any key to continue...')!=None:
+
+
+#check 디렉토리 구성
+
+    os.makedirs('check', exist_ok=True)
+    with open(os.path.join('check','main.py'),'w') as f:
+        f.write('''
+import os,shutil,pyfoam
+shutil.copytree(os.path.join('..','CaseTemplate'), '50deg',dirs_exist_ok=True)
+pyfoam.launch()
+pyfoam.transformPoints()
+        \n''')
+    with open(os.path.join('check','menu.py'),'w') as f:
+        f.write('''
+def boxheader(title):
+    padding = int((35-len(title))/2)
+    print('┌'+'─'*padding+title+padding*'─'+'┐')
+def boxcontent(string):
+    print('│'+'  '+string+' '*(33-len(string))+'│')
+def boxfooter():
+    print("└───────────────────────────────────┘")
+def box(title, list):
+    boxheader(title)
+    for string in list:
+        boxcontent(string)
+    boxfooter()
+def main():
+    list = [
+        "",
+        "",
+        "I.   Case management",
+        ''
+        '  [  1  ]  initialize'
+        "",
+        "",
+        "II.  OpenFOAM",
+        "",
+        "  [  2  ]  postProcessing",
+        "  [  3  ]  foamRun",
+        "  [  4  ]  PARALLEL foamRun",
+        "",
+        ""
+        ]
+    title = '[ AUTO  PROCESSER ]'
+    box(title, list)
+        \n''')
+    with open(os.path.join('check','auto.py'),'w') as f:
+        f.write('''
+import pyfoam, menu
+
+pyfoam.launch()
+ans = None
+
+
+menu.main()
+ans =  input("enter the NUMBER of task you want: ")
+choice = int(ans)
+
+if   choice ==     1:  import make
+    
+elif choice ==     2:  pyfoam.postProcessing()
+
+elif choice ==     3:  pyfoam.foamRun()
+
+elif choice ==     4:  pyfoam.parallelRun()
+
+else: print("[INVALID CHOICE]")
+        \n''')
+
+
+#p1,p2 디렉토리 구성
+
     with open(os.path.join('p1','make.py'),'w') as f:
         f.write("""
 import os
@@ -154,7 +228,7 @@ def postProcessing():
     plt.plot(r_case, r_drag_mean, label = "Drag", color = (0.0, 0.0, 0.0, 0.5), linestyle="-", marker="")
     plt.axhline(y=float(686), label = "Gravity", color = (0.0, 0.0, 1.0, 0.7), linestyle=":")
     plt.plot(r_case, r_lift_mean, label = "Lift", color = (1.0, 0.0, 0.0, 1.0), linestyle="-", marker="")
-    plt.title(f"Lift and Drag of Human Body [ angle : [ Wind Velocity : 60m/s ]")
+    plt.title(f"Lift and Drag of Human Body [ Wind Velocity : 60m/s ]")
     plt.xlabel("Angle        [  deg  ]")
     plt.ylabel("Force        [   N   ]")
     plt.grid(True)
@@ -440,16 +514,10 @@ for case in pyfoam.cases:
     case.changeU()
     os.remove(os.path.join(root,case.name,'constant','triSurface','humaHQ0deg.stl'))
         \n""")
-    os.makedirs('check', exist_ok=True)
-    shutil.copytree('CaseTemplate',os.path.join('check','50deg'), dirs_exist_ok=True)
-    with open (os.path.join('check','auto.py')) as f:
-        f.write('''
-        
-        ''')
+
     for i in range (1,3):
         os.makedirs(f'p{i}', exist_ok=True)
         shutil.copytree('CaseTemplate',os.path.join(f'p{i}','CaseTemplate'))
-        subprocess.run([sys.executable,os.path.join(f'p{i}','make.py')],check=True)
         with open (os.path.join(f'p{i}','menu.py'),'w') as f:
             f.write('''
 def boxheader(title):
@@ -535,3 +603,6 @@ elif choice ==     8:  pyfoam.parallelRun()
 
 else: print("[INVALID CHOICE]")
                         \n''')
+
+
+        subprocess.run([sys.executable,os.path.join(f'p{i}','make.py')],check=True)
