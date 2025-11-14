@@ -12,15 +12,8 @@ class Case:
     def __init__(self, name):
         try:
             self.name=name
-            if self.name.startswith ("m-"):
-                self.angle = float(self.name[1:-3])
-            else:
-                self.angle = float(self.name[:-3])
-            if self.angle<0 and self.angle>-25:
-                casesproc.append(self)
-                casesproc.sort(key = lambda case:case.angle)
+            self.angle = float(self.name[:-3])
             cases.append(self)
-            cases.sort(key = lambda case:case.angle)
         except: pass
     def delete(self, folder, file=None):
         source = os.path.join(cases_root, self.name, folder,)
@@ -30,17 +23,6 @@ class Case:
         elif os.path.exists(os.path.join(source, file)):
             os.remove(os.path.join(source, file))
             print(f"Deleted {os.path.join(source, file)}")
-
-    def update(self, rawfolder, file=None):
-        folder = str(rawfolder)
-        target = os.path.join(cases_root, "CaseTemplate", folder)
-        source = os.path.join(cases_root, self.name, folder)
-        if file==None and os.path.exists(target):
-            shutil.copytree(target, source, dirs_exist_ok=True)
-            print(f"Updated {source}")
-        elif os.path.exists(os.path.join(target, file)):
-            shutil.copy2(os.path.join(target, file), os.path.join(source, file) )
-            print(f"Updated {os.path.join(source, file)}")
     def forces(self):
         global results
         timelines = []
@@ -111,6 +93,19 @@ class Case:
         drag_list.clear()
         plt.close()
     
+    def decompose(self, num):
+        with open (os.path.join(cases_root,self.name,"system","decomposeParDict"), "r") as f:
+            lines = f.readlines()
+        with open (os.path.join(cases_root,self.name,"system","decomposeParDict"), "w") as f:
+            for line in lines:
+                if "numberOfSubdomains" in line:
+                    f.write(f"numberOfSubdomains  {num};\n")
+                else:f.write(line)
+        try: 
+            subprocess.run(["decomposePar"], cwd = os.path.join(cases_root, self.name))
+        except: print("[오류 발생: foamRun] 이 프로세스는 v11 이상의 OpenFOAM 환경에서 진행해야 합니다.")
+        subprocess.Popen(["mpirun","-np",str(num),"foamRun","-parallel"], cwd = os.path.join(cases_root,self.name))
+
     def foamRun(self):
         try: 
             p = subprocess.Popen(["foamRun"], cwd = os.path.join(cases_root, self.name))
@@ -123,50 +118,13 @@ class Case:
             return p
         except: print("[오류 발생: foamRun] 이 프로세스는 v11 이상의 OpenFOAM 환경에서 진행해야 합니다.")
 
-def postProcessing():
-    global results
-    results.clear()
-    folders = sorted(cases, key = lambda f:f.angle )
-    for case in folders: case.forces()
-    df = pd.DataFrame(results)
-    df.to_excel("total_forces_10423.xlsx", index=False)
-    plt.plot(r_case, r_drag_std, label = "Drag Std", color = (0.0, 0.0, 0.0, 0.3), linestyle=":", marker="")
-    plt.plot(r_case, r_lift_std, label = "Lift Std", color = (1.0, 0.0, 0.0, 0.4), linestyle=":", marker="")
-    plt.plot(r_case, r_drag_mean, label = "Drag", color = (0.0, 0.0, 0.0, 0.5), linestyle="-", marker="")
-    plt.axhline(y=float(686), label = "Gravity", color = (0.0, 0.0, 1.0, 0.7), linestyle=":")
-    plt.plot(r_case, r_lift_mean, label = "Lift", color = (1.0, 0.0, 0.0, 1.0), linestyle="-", marker="")
-    plt.title(f"Lift and Drag of Human Body [ angle : [ Wind Velocity : 60m/s ]")
-    plt.xlabel("Angle        [  deg  ]")
-    plt.ylabel("Force        [   N   ]")
-    plt.grid(True)
-    plt.legend(
-        loc       = "lower right",
-        frameon   = True,
-        edgecolor = "black",
-        facecolor = "white",
-        )
-
-    plt.savefig(f"total_forces_10423.png", dpi=300, bbox_inches='tight')
-    plt.close()
-
 def launch(): 
     cases.clear()
     for case in os.listdir(cases_root): case = Case(case)
-
-def conc(func):
-    def wrapper():
-        global process
-        process = []
-        num = int(input("Concurrency level: "))
-        for i in range(0, len(casesproc), num):
-            batch = casesproc[i : i+num]
-            for case in batch:
-                p = func(case)
-                if p: process.append(p)
-            for p in process: p.wait()
-            process.clear()
-    return wrapper
-@conc
-def foamRun(case): return case.foamRun()
-@conc
-def transformPoints(case): return case.transformPoints()
+def foamRun():
+    for case in cases:case.foamRun()
+def parallelRun():
+    num = input("Enter Number of Subdomains: ")
+    for case in cases:case.decompose(num)
+def postProcessing():
+    for case in cases:case.forces()
