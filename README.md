@@ -41,17 +41,18 @@
 
 앞의 모든 다운로드 과정을 마친 후 아래의 명령어를 터미널에 입력합니다.
 
-``` 
+``` Powershell or CMD
 curl -L -o PATH.py https://raw.githubusercontent.com/s2510423/2025-2-CFD/main/SetUp/Windows/PATH.py
 python PATH.py
 ```
+
 ### **Linux**
 
 >\[OS 버전] 실험자는 Ubuntu 22.04 LTS 환경에서 진행하였습니다.
 
 아래의 명령어를 터미널에 입력합니다.
 
-```
+``` bash
 wget https://raw.githubusercontent.com/s2510423/2025-2-CFD/main/SetUp/Linux/CFD.sh
 bash CFD.sh
 ```
