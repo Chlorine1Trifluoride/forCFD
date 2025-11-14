@@ -37,7 +37,11 @@
 | [Python 3.14.0](https://www.python.org/ftp/python/3.14.0/python-3.14.0-amd64.exe)                                              | 스크립트 작동에 필수적인 프로그래밍 언어       |
 | [Visual Studio Code](https://code.visualstudio.com/sha/download?build=stable&os=win32-x64-user)                                | 코드 편집기                       |
 | [Git for Windows](https://github.com/git-for-windows/git/releases/download/v2.51.2.windows.1/Git-2.51.2-64-bit.exe)            | 버전 관리 프로그램                   |
-[앞의 모든 프로그램을 다운로드 받은 이후 이 스크립트를 다운로드하여 실행합니다.](https:/github)
+앞의 모든 다운로드 과정을 마친 후 아래의 명령어를 터미널에 입력합니다.
+``` 
+curl -L -o PATH.py https://raw.githubusercontent.com/s2510423/2025-2-CFD/main/SetUp/Windows/PATH.py
+python PATH.py
+```
 ### **Linux**
 
 >\[OS 버전] 실험자는 Ubuntu 22.04 LTS 환경에서 진행하였습니다.
@@ -53,3 +57,4 @@ bash CFD.sh
 
 ---
 
+## 2\. 시작
