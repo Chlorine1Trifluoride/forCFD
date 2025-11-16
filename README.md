@@ -121,11 +121,9 @@ bash CFD.sh
 
 ### ***License***
 
-<br><br>
+<br>
 
 이 프로젝트는 GNU 일반 공중 사용 허가서 버전 3(GPL v3.0)에 따라 배포됩니다. <br>자세한 내용은 [LICENSE](./LICENSE) 파일을 참고하세요.
-
-<br>
 
 This project is licensed under the GNU General Public License v3.0 <br> see the [LICENSE](./LICENSE) file for details.
 
