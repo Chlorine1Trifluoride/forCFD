@@ -5,8 +5,8 @@ import re
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-cases_root = os.path.join('..', 'p2')
-cases=[];casesproc=[];process=[];results=[]
+cases_root_p2 = os.path.join('..', 'p2')
+cases_p2=[];casesproc=[];process=[];results=[]
 r_case=[]; r_lift_mean=[]; r_lift_std=[]; r_drag_mean=[]; r_drag_std=[]
 class Case_p2:
     def __init__(self, name):
@@ -16,13 +16,13 @@ class Case_p2:
             if self.velocity>0:
                 casesproc.append(self)
                 casesproc.sort(key = lambda case:case.velocity)
-            cases.append(self)
-            cases.sort(key = lambda case:case.velocity)
+            cases_p2.append(self)
+            cases_p2.sort(key = lambda case:case.velocity)
         except: pass
     def delete(self, folder, file=None):
-        try:source = os.path.join(cases_root, self.name, folder,)
+        try:source = os.path.join(cases_root_p2, self.name, folder,)
         except TypeError: 
-            if file!=None:source = os.path.join(cases_root,self.name)
+            if file!=None:source = os.path.join(cases_root_p2,self.name)
         if file ==None:
             shutil.rmtree(source)
             print(f"Deleted {source}")
@@ -33,9 +33,9 @@ class Case_p2:
 
     def update(self, rawfolder, file=None):
         folder = str(rawfolder)
-        try: target = os.path.join(cases_root, "CaseTemplate", folder); source = os.path.join(cases_root, self.name, folder)
+        try: target = os.path.join(cases_root_p2, "CaseTemplate", folder); source = os.path.join(cases_root_p2, self.name, folder)
         except TypeError: 
-            if file!=None:target = os.path.join(cases_root, "CaseTemplate"); source = os.path.join(cases_root, self.name)
+            if file!=None:target = os.path.join(cases_root_p2, "CaseTemplate"); source = os.path.join(cases_root_p2, self.name)
         if file==None and os.path.exists(target):
             shutil.copytree(target, source, dirs_exist_ok=True)
             print(f"Updated {source}")
@@ -44,35 +44,26 @@ class Case_p2:
             print(f"Updated {os.path.join(source, file)}")
         
     def changeU(self):
-        with open(os.path.join(cases_root,self.name,"0","U"), "r") as f:
+        with open(os.path.join(cases_root_p2,self.name,"0","U"), "r") as f:
             lines = f.readlines()
-        with open(os.path.join(cases_root,self.name,"0","U"), "w") as f:
+        with open(os.path.join(cases_root_p2,self.name,"0","U"), "w") as f:
             for line in lines:
                 if "internalField   uniform (0 60 0);" in line:
                     f.write(f"internalField   uniform (0 {self.velocity} 0);\n")
                 elif "        value   uniform (0 60 0);" in line:
                     f.write(f"        value   uniform (0 {self.velocity} 0);\n")
                 else: f.write(line)
-    
-    def decompose(self, num):
-        with open (os.path.join(cases_root,self.name,"system","decomposeParDict"), "r") as f:
-            lines = f.readlines()
-        with open (os.path.join(cases_root,self.name,"system","decomposeParDict"), "w") as f:
-            for line in lines:
-                if "numberOfSubdomains" in line:
-                    f.write(f"numberOfSubdomains  {num};\n")
-                else:f.write(line)
         try: 
-            subprocess.run(["decomposePar"], cwd = os.path.join(cases_root, self.name))
+            subprocess.run(["decomposePar"], cwd = os.path.join(cases_root_p2, self.name))
         except: print("[오류 발생: foamRun] 이 프로세스는 v11 이상의 OpenFOAM 환경에서 진행해야 합니다.")
-        p = subprocess.Popen(["mpirun","-np",str(num),"foamRun","-parallel"], cwd = os.path.join(cases_root,self.name))
+        p = subprocess.Popen(["mpirun","-np",str(num),"foamRun","-parallel"], cwd = os.path.join(cases_root_p2,self.name))
         return p
     def forces(self):
         global results
         timelines = []
         drag_list = []
         lift_list = []
-        dat = os.path.join(cases_root, self.name, "postProcessing", "Forces", "0", "forces.dat")
+        dat = os.path.join(cases_root_p2, self.name, "postProcessing", "Forces", "0", "forces.dat")
         with open(dat, "r")as f:
             for line in f:
                 if line.startswith("#") or line.strip() =="":
@@ -136,18 +127,13 @@ class Case_p2:
         lift_list.clear()
         drag_list.clear()
         plt.close()
-    
-    def foamRun(self):
-        try: 
-            p = subprocess.Popen(["foamRun"], cwd = os.path.join(cases_root, self.name))
-            return p
-        except: print("[오류 발생: foamRun] 이 프로세스는 v11 이상의 OpenFOAM 환경에서 진행해야 합니다.")
+    int("[오류 발생: foamRun] 이 프로세스는 v11 이상의 OpenFOAM 환경에서 진행해야 합니다.")
 
 
 def postProcessing():
     global results
     results.clear()
-    folders = sorted(cases, key = lambda f:f.velocity )
+    folders = sorted(cases_p2, key = lambda f:f.velocity )
     for case in folders: case.forces()
     df = pd.DataFrame(results)
     df.to_excel("total_forces_10423.xlsx", index=False)
@@ -171,8 +157,8 @@ def postProcessing():
     plt.close()
 
 def launch(): 
-    cases.clear()
-    for case in os.listdir(cases_root): case = Case(case)
+    cases_p2.clear()
+    for case in os.listdir(cases_root_p2): case = Case(case)
 
 def batch(func):
     def wrapper():
