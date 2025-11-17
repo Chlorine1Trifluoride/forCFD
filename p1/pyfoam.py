@@ -1,17 +1,28 @@
-import os
-import subprocess
-import shutil
-import re
+import os,subprocess,shutil,re
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-cases_root=os.path.join('..', 'p1')
-cases=[];casesproc=[];process=[];results=[]
+cases_root_p1=os.path.join('..', 'p1')
+cases_p1=[];casesproc=[];process=[];results=[]
 r_case=[]; r_lift_mean=[]; r_lift_std=[]; r_drag_mean=[]; r_drag_std=[]
 class Case:
-    def __init__(self, name):
+    def __init__(self,name):self.name=name
+    def foamRun(self):
+        try: 
+            p = subprocess.Popen(["foamRun"], cwd = os.path.join(cases_root_p1, self.name))
+            return p
+        except: print("[오류 발생: foamRun] 이 프로세스는 v11 이상의 OpenFOAM 환경에서 진행해야 합니다.")
+    def decompose(self, num):
+        with open (os.path.join(cases_root_p1,self.name,"system","decomposeParDict"), "r") as f:
+            lines = f.readlines()
+        with open (os.path.join(cases_root_p1,self.name,"system","decomposeParDict"), "w") as f:
+            for line in lines:
+                if "numberOfSubdomains" in line:
+                    f.write(f"numberOfSubdomains  {num};\n")
+                else:f.write(line)
+class Case_p1(Case):
+    def __init__(self):
         try:
-            self.name=name
             if self.name.startswith ("m-"):
                 self.angle = float(self.name[1:-3])
             else:
@@ -19,13 +30,13 @@ class Case:
             if self.angle and self.angle:
                 casesproc.append(self)
                 casesproc.sort(key = lambda case:case.angle)
-            cases.append(self)
-            cases.sort(key = lambda case:case.angle)
+            cases_p1.append(self)
+            cases_p1.sort(key = lambda case:case.angle)
         except: pass
     def delete(self, folder, file=None):
-        try:source = os.path.join(cases_root, self.name, folder,)
+        try:source = os.path.join(cases_root_p1, self.name, folder,)
         except TypeError: 
-            if file!=None:source = os.path.join(cases_root,self.name)
+            if file!=None:source = os.path.join(cases_root_p1,self.name)
         if file ==None:
             shutil.rmtree(source)
             print(f"Deleted {source}")
@@ -36,9 +47,9 @@ class Case:
 
     def update(self, rawfolder, file=None):
         folder = str(rawfolder)
-        try: target = os.path.join(cases_root, "CaseTemplate", folder); source = os.path.join(cases_root, self.name, folder)
+        try: target = os.path.join(cases_root_p1, "CaseTemplate", folder); source = os.path.join(cases_root_p1, self.name, folder)
         except TypeError: 
-            if file!=None:target = os.path.join(cases_root, "CaseTemplate"); source = os.path.join(cases_root, self.name)
+            if file!=None:target = os.path.join(cases_root_p1, "CaseTemplate"); source = os.path.join(cases_root_p1, self.name)
         if file==None and os.path.exists(target):
             shutil.copytree(target, source, dirs_exist_ok=True)
             print(f"Updated {source}")
@@ -50,7 +61,7 @@ class Case:
         timelines = []
         drag_list = []
         lift_list = []
-        dat = os.path.join(cases_root, self.name, "postProcessing", "Forces", "0", "forces.dat")
+        dat = os.path.join(cases_root_p1, self.name, "postProcessing", "Forces", "0", "forces.dat")
         with open(dat, "r")as f:
             for line in f:
                 if line.startswith("#") or line.strip() =="":
@@ -117,20 +128,20 @@ class Case:
     
     def foamRun(self):
         try: 
-            p = subprocess.Popen(["foamRun"], cwd = os.path.join(cases_root, self.name))
+            p = subprocess.Popen(["foamRun"], cwd = os.path.join(cases_root_p1, self.name))
             return p
         except: print("[오류 발생: foamRun] 이 프로세스는 v11 이상의 OpenFOAM 환경에서 진행해야 합니다.")
     def transformPoints(self):
         try:
             command = f"transformPoints 'Rx={self.angle}' "
-            p = subprocess.Popen(command, cwd = os.path.join(cases_root, self.name), shell=True)
+            p = subprocess.Popen(command, cwd = os.path.join(cases_root_p1, self.name), shell=True)
             return p
         except: print("[오류 발생: foamRun] 이 프로세스는 v11 이상의 OpenFOAM 환경에서 진행해야 합니다.")
 
 def postProcessing():
     global results
     results.clear()
-    folders = sorted(cases, key = lambda f:f.angle )
+    folders = sorted(cases_p1, key = lambda f:f.angle )
     for case in folders: case.forces()
     df = pd.DataFrame(results)
     df.to_excel("total_forces_10423.xlsx", index=False)
@@ -154,8 +165,8 @@ def postProcessing():
     plt.close()
 
 def launch(): 
-    cases.clear()
-    for case in os.listdir(cases_root): case = Case(case)
+    cases_p1.clear()
+    for case in os.listdir(cases_root_p1): case = Case_p1(case)
 
 def parallelRun():
         global process

@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 cases_root = os.path.join('..', 'p2')
 cases=[];casesproc=[];process=[];results=[]
 r_case=[]; r_lift_mean=[]; r_lift_std=[]; r_drag_mean=[]; r_drag_std=[]
-class Case:
+class Case_p2:
     def __init__(self, name):
         try:
             self.name=name
