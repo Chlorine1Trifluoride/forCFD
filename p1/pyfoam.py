@@ -2,9 +2,13 @@ import os,subprocess,shutil,re
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+
+
 cases_root_p1=os.path.join('..', 'p1')
-cases_p1=[];casesproc=[];process=[];results=[]
+cases_p1=[];
+casesproc=[];process=[];results=[]
 r_case=[]; r_lift_mean=[]; r_lift_std=[]; r_drag_mean=[]; r_drag_std=[]
+
 class Case:
     def __init__(self,name):self.name=name
     def foamRun(self):
