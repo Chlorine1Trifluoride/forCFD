@@ -4,12 +4,9 @@ import re
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-r_case=[]; r_lift_mean=[]; r_lift_std=[]; r_drag_mean=[]; r_drag_std=[]
-
-
-cases_root_check=os.path.join('..', 'check')
-class Case
-def forces(self):
+r_case=[]; r_lift_mean=[]; r_lift_std=[]; r_drag_mean=[]; r_drag_std=[];cases_root_check=os.path.join('..', 'check')
+#1차 파라메트릭 스윕 결과 검증용 케이스 전용 함수들
+def forces_check():
     global results
     timelines = []
     drag_list = []
@@ -36,7 +33,7 @@ def forces(self):
     drag_std = np.std(drag_arr)
     lift_std = np.std(lift_arr)
     timelines_arr = np.array(timelines)
-    r_case.append(self.angle)
+    r_case.append(50)
     r_lift_mean.append(lift_mean)
     r_lift_std.append(lift_std)
     r_drag_mean.append(drag_mean)
@@ -72,27 +69,27 @@ def forces(self):
     drag_list.clear()
     plt.close()
 
-def decompose(self, num):
-    with open (os.path.join(cases_root_check,self.name,"system","decomposeParDict"), "r") as f:
+def decompose_check(num):
+    with open (os.path.join(cases_root_check,'50deg',"system","decomposeParDict"), "r") as f:
         lines = f.readlines()
-    with open (os.path.join(cases_root_check,self.name,"system","decomposeParDict"), "w") as f:
+    with open (os.path.join(cases_root_check,'50deg',"system","decomposeParDict"), "w") as f:
         for line in lines:
             if "numberOfSubdomains" in line:
                 f.write(f"numberOfSubdomains  {num};\n")
             else:f.write(line)
     try: 
-        subprocess.run(["decomposePar"], cwd = os.path.join(cases_root_check, self.name))
+        subprocess.run(["decomposePar"], cwd = os.path.join(cases_root_check, '50deg'))
     except: print("[오류 발생: foamRun] 이 프로세스는 v11 이상의 OpenFOAM 환경에서 진행해야 합니다.")
-    subprocess.Popen(["mpirun","-np",str(num),"foamRun","-parallel"], cwd = os.path.join(cases_root_check,self.name))
+    subprocess.Popen(["mpirun","-np",str(num),"foamRun","-parallel"], cwd = os.path.join(cases_root_check,'50deg'))
 
-def foamRun(self):
+def foamRun_check():
     try: 
-        p = subprocess.Popen(["foamRun"], cwd = os.path.join(cases_root_check, self.name))
+        p = subprocess.Popen(["foamRun"], cwd = os.path.join(cases_root_check, '50deg'))
         return p
     except: print("[오류 발생: foamRun] 이 프로세스는 v11 이상의 OpenFOAM 환경에서 진행해야 합니다.")
-def transformPoints(self):
+def transformPoints_check():
     try:
-        command = f"transformPoints 'Rx={self.angle}' "
-        p = subprocess.Popen(command, cwd = os.path.join(cases_root_check, self.name), shell=True)
+        command = f"transformPoints 'Rx={50}' "
+        p = subprocess.Popen(command, cwd = os.path.join(cases_root_check, '50deg'), shell=True)
         return p
     except: print("[오류 발생: foamRun] 이 프로세스는 v11 이상의 OpenFOAM 환경에서 진행해야 합니다.")

@@ -5,13 +5,13 @@ def boxcontent(string):
     print('│'+'  '+string+' '*(33-len(string))+'│')
 def boxfooter():
     print("└───────────────────────────────────┘")
-def box(title, list):
+def box(title, contents):
     boxheader(title)
-    for string in list:
+    for string in contents:
         boxcontent(string)
     boxfooter()
-def main():
-    list = [
+def check():
+    contents = [
         "",
         "",
         "I.   Case management",
@@ -27,6 +27,6 @@ def main():
         "",
         ""
         ]
-    title = '[ AUTO  PROCESSER ]'
-    box(title, list)
+    title = '[ AUTO PROCESSER: check ]'
+    box(title, contents)
 

@@ -5,13 +5,13 @@ def boxcontent(string):
     print('│'+'  '+string+' '*(33-len(string))+'│')
 def boxfooter():
     print("└───────────────────────────────────┘")
-def box(title, list):
+def box(title, contents):
     boxheader(title)
-    for string in list:
+    for string in contents:
         boxcontent(string)
     boxfooter()
-def main():
-    list = [
+def p1():
+    contents = [
         "",
         "",
         "I.   Case management",
@@ -22,7 +22,7 @@ def main():
         "  [  3  ]  Delete FILE",
         "  [  4  ]  Delete DIRECTORY",
         ''
-        '  [  5  ]  initialize'
+        '  [  5  ]  initialize',
         "",
         "",
         "II.  OpenFOAM",
@@ -33,6 +33,53 @@ def main():
         "",
         ""
         ]
-    title = '[ AUTO  PROCESSER ]'
-    box(title, list)
+    title = '[ AUTO  PROCESSER: p1 ]'
+    box(contents,title)
 
+
+def p2():
+    contents = [
+        "",
+        "",
+        "I.   Case management",
+        "",
+        "  [  1  ]  Update FILE",
+        "  [  2  ]  Update DIRECTORY",
+        "",
+        "  [  3  ]  Delete FILE",
+        "  [  4  ]  Delete DIRECTORY",
+        ''
+        '  [  5  ]  initialize',
+        "",
+        "",
+        "II.  OpenFOAM",
+        "",
+        "  [  6  ]  postProcessing",
+        "  [  7  ]  foamRun",
+        "  [  8  ]  PARALLEL foamRun",
+        "",
+        ""
+        ]
+    title = '[ AUTO  PROCESSER: p2 ]'
+    box(title, contents)
+
+
+def check():
+    contents = [
+        "",
+        "",
+        "I.   Case management",
+        '',
+        '  [  1  ]  initialize',
+        "",
+        "",
+        "II.  OpenFOAM",
+        "",
+        "  [  2  ]  postProcessing",
+        "  [  3  ]  foamRun",
+        "  [  4  ]  PARALLEL foamRun",
+        "",
+        ""
+        ]
+    title = '[ AUTO PROCESSER: check ]'
+    box(title, contents)

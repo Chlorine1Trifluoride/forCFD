@@ -6,16 +6,18 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 cases_root_p2 = os.path.join('..', 'p2')
-cases_p2=[];casesproc=[];process=[];results=[]
+cases_p2=[];casesproc_p2=[];process=[];results=[]
 r_case=[]; r_lift_mean=[]; r_lift_std=[]; r_drag_mean=[]; r_drag_std=[]
+
+#2번 파라메트릭 스윕 전용 클래스
 class Case_p2:
     def __init__(self, name):
         try:
-            self.name=name
+            super.__init__(name)
             self.velocity = float(self.name[:-3])
-            if self.velocity>0:
-                casesproc.append(self)
-                casesproc.sort(key = lambda case:case.velocity)
+            if self.velocity:
+                casesproc_p2.append(self)
+                casesproc_p2.sort(key = lambda case:case.velocity)
             cases_p2.append(self)
             cases_p2.sort(key = lambda case:case.velocity)
         except: pass
@@ -129,8 +131,8 @@ class Case_p2:
         plt.close()
     int("[오류 발생: foamRun] 이 프로세스는 v11 이상의 OpenFOAM 환경에서 진행해야 합니다.")
 
-
-def postProcessing():
+#2번 파라메트릭 스윕 전용 함수들
+def postProcessing_p2():
     global results
     results.clear()
     folders = sorted(cases_p2, key = lambda f:f.velocity )
@@ -156,7 +158,7 @@ def postProcessing():
     plt.savefig(f"total_forces_10423.png", dpi=300, bbox_inches='tight')
     plt.close()
 
-def launch(): 
+def launch_p2(): 
     cases_p2.clear()
     for case in os.listdir(cases_root_p2): case = Case(case)
 
@@ -166,8 +168,8 @@ def batch(func):
         process = []
         temp = 0
         num = int(input("Batch Size: "))
-        for i in range(0, len(casesproc), num):
-            batch = casesproc[i : i+num]
+        for i in range(0, len(casesproc_p2), num):
+            batch = casesproc_p2[i : i+num]
             for case in batch:
                 p = func(case)
                 if p: process.append(p)
@@ -176,14 +178,15 @@ def batch(func):
         temp = None
     return wrapper
 @batch
-def foamRun(case): return case.foamRun()
-def parallelRun():
+def foamRun_p2(case): return case.foamRun()
+
+def parallelRun_p2():
         global process
         process = []
         num = int(input("Batch Size: "))
         sub = int(input("Number Of Subdomains: "))
-        for i in range(0, len(casesproc), num):
-            batch = casesproc[i : i+num]
+        for i in range(0, len(casesproc_p2), num):
+            batch = casesproc_p2[i : i+num]
             for case in batch:
                 p = case.decompose(sub)
                 if p: process.append(p)

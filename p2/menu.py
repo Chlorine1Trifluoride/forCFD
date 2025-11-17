@@ -5,13 +5,13 @@ def boxcontent(string):
     print('│'+'  '+string+' '*(33-len(string))+'│')
 def boxfooter():
     print("└───────────────────────────────────┘")
-def box(title, list):
+def box(title, contents):
     boxheader(title)
-    for string in list:
+    for string in contents:
         boxcontent(string)
     boxfooter()
-def main():
-    list = [
+def p2():
+    contents = [
         "",
         "",
         "I.   Case management",
@@ -22,7 +22,7 @@ def main():
         "  [  3  ]  Delete FILE",
         "  [  4  ]  Delete DIRECTORY",
         ''
-        '  [  5  ]  initialize'
+        '  [  5  ]  initialize',
         "",
         "",
         "II.  OpenFOAM",
@@ -33,6 +33,6 @@ def main():
         "",
         ""
         ]
-    title = '[ AUTO  PROCESSER ]'
-    box(title, list)
+    title = '[ AUTO  PROCESSER: p2 ]'
+    box(title, contents)
 
