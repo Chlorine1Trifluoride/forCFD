@@ -21,7 +21,8 @@ class Case:
                     f.write(f"numberOfSubdomains  {num};\n")
                 else:f.write(line)
 class Case_p1(Case):
-    def __init__(self):
+    def __init__(self,name):
+        super().__init__(name)
         try:
             if self.name.startswith ("m-"):
                 self.angle = float(self.name[1:-3])
