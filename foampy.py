@@ -1,28 +1,31 @@
 import os,subprocess,shutil,re;import numpy as np;import pandas as pd;import matplotlib.pyplot as plt
 
 
-cases_root_p1=os.path.join('..', 'p1');cases_root_p2=os.path.join('..', 'p2');cases_root_check=os.path.join('..', 'check')
+
 cases_p1=[];cases_p2=[];cases_check=[]
-casesproc_p1=[];casesproc_p2=[];casesproc_p1=[]
+casesproc_p1=[];casesproc_p2=[]
 process=[];results=[]; r_case=[];r_lift_mean=[];r_lift_std=[];r_drag_mean=[];r_drag_std=[]
 
+def r_clear():
+    for i in [results,r_case,r_lift_mean,r_lift_std,r_drag_mean,r_drag_std]: i.clear()
 
 #케이스 공통 부모 클래스
 class Case:
     def __init__(self,name):self.name=name
     def foamRun(self):
         try: 
-            p = subprocess.Popen(["foamRun"], cwd = os.path.join(cases_root_p1, self.name))
+            p = subprocess.Popen(["foamRun"], cwd = os.path.join('p1', self.name))
             return p
         except: print("[오류 발생: foamRun] 이 프로세스는 v11 이상의 OpenFOAM 환경에서 진행해야 합니다.")
     def decompose(self, num):
-        with open (os.path.join(cases_root_p1,self.name,"system","decomposeParDict"), "r") as f:
+        with open (os.path.join('p1',self.name,"system","decomposeParDict"), "r") as f:
             lines = f.readlines()
-        with open (os.path.join(cases_root_p1,self.name,"system","decomposeParDict"), "w") as f:
+        with open (os.path.join('p1',self.name,"system","decomposeParDict"), "w") as f:
             for line in lines:
                 if "numberOfSubdomains" in line:
                     f.write(f"numberOfSubdomains  {num};\n")
                 else:f.write(line)
+                
 
 
 #1번 파라메트릭 스윕 전용 클래스
@@ -40,40 +43,45 @@ class Case_p1(Case):
             cases_p1.append(self)
             cases_p1.sort(key = lambda case:case.angle)
         except: pass
+
     def delete(self, folder, file=None):
-        try:source = os.path.join(cases_root_p1, self.name, folder,)
-        except TypeError: 
-            if file!=None:source = os.path.join(cases_root_p1,self.name)
-        if file ==None:
-            shutil.rmtree(source)
-            print(f"Deleted {source}")
-        elif os.path.exists(os.path.join(source, file)):
-            os.remove(os.path.join(source, file))
-            print(f"Deleted {os.path.join(source, file)}")
+        base=os.path.join('p1',self.name)
+        if folder is None and file:
+            os.remove(os.path.join(base,file))
+            print(f'Deleted {os.path.join(base,file)}')
+        elif folder and file is None:
+            shutil.rmtree(os.path.join(base,folder))
+            print(f'Deleted {os.path.join(base,folder)}')
+        elif folder and file:
+            os.remove(os.path.join(base,folder,file))
+            print(f'Deleted {os.path.join(base,folder,file)}')
         
 
-    def update(self, rawfolder, file=None):
-        folder = str(rawfolder)
-        try: target = os.path.join(cases_root_p1, "CaseTemplate", folder); source = os.path.join(cases_root_p1, self.name, folder)
-        except TypeError: 
-            if file!=None:target = os.path.join(cases_root_p1, "CaseTemplate"); source = os.path.join(cases_root_p1, self.name)
-        if file==None and os.path.exists(target):
-            shutil.copytree(target, source, dirs_exist_ok=True)
-            print(f"Updated {source}")
-        elif os.path.exists(os.path.join(target, file)):
-            shutil.copy2(os.path.join(target, file), os.path.join(source, file) )
-            print(f"Updated {os.path.join(source, file)}")
+    def update(self, folder, file=None):
+        base=os.path.join('p1',self.name)
+        source=os.path.join('p1','Casetemplate')
+        if folder is None and file:
+            shutil.copy2(os.path.join(source,file),os.path.join(base,file))
+            print(f'Updated {os.path.join(base,file)}')
+        elif folder and file is None:
+            shutil.copytree(os.path.join(source,folder),os.path.join(base,folder),dirs_exist_ok=True)
+            print(f'Updated {os.path.join(base,folder)}')
+        elif folder and file:
+            shutil.copy2(os.path.join(source,folder,file),os.path.join(base,folder,file))
+            print(f'Updated {os.path.join(base,folder,file)}')
+
+
     def forces(self):
         global results
         timelines = []
         drag_list = []
         lift_list = []
-        dat = os.path.join(cases_root_p1, self.name, "postProcessing", "Forces", "0", "forces.dat")
+        dat = os.path.join('p1', self.name, "postProcessing", "Forces", "0", "forces.dat")
         with open(dat, "r")as f:
             for line in f:
                 if line.startswith("#") or line.strip() =="":
                     continue
-                timeline = float(line[:4].strip())
+                timeline = float(line[:10].strip())
                 if timeline<1:continue
                 vectors = re.findall(r"\(([^()]+)\)", line)
                 f_a = vectors[0].strip().split()
@@ -135,21 +143,20 @@ class Case_p1(Case):
     
     def foamRun(self):
         try: 
-            p = subprocess.Popen(["foamRun"], cwd = os.path.join(cases_root_p1, self.name))
+            p = subprocess.Popen(["foamRun"], cwd = os.path.join('p1', self.name))
             return p
         except: print("[오류 발생: foamRun] 이 프로세스는 v11 이상의 OpenFOAM 환경에서 진행해야 합니다.")
     def transformPoints(self):
         try:
             command = f"transformPoints 'Rx={self.angle}' "
-            p = subprocess.Popen(command, cwd = os.path.join(cases_root_p1, self.name), shell=True)
+            p = subprocess.Popen(command, cwd = os.path.join('p1', self.name), shell=True)
             return p
         except: print("[오류 발생: foamRun] 이 프로세스는 v11 이상의 OpenFOAM 환경에서 진행해야 합니다.")
 
 
 #1번 파라메트릭 스윕 전용 함수들
 def postProcessing_p1():
-    global results
-    results.clear()
+    r_clear()
     folders = sorted(cases_p1, key = lambda f:f.angle )
     for case in folders: case.forces()
     df = pd.DataFrame(results)
@@ -175,7 +182,18 @@ def postProcessing_p1():
 
 def launch_p1(): 
     cases_p1.clear()
-    for case in os.listdir(cases_root_p1): case = Case_p1(case)
+    for case in os.listdir('p1'): case = Case_p1(case)
+
+def update_p1():
+    folder=input('Enter your FOLDER name: ')
+    file=input('Enter your FILE name: ')
+    for case in cases_p1:
+        case.update(folder,file)
+def delete_p1():
+    folder=input('Enter your FOLDER name: ')
+    file=input('Enter your FILE name: ')
+    for case in cases_p1:
+        case.delete(folder,file)
 
 def parallelRun_p1():
         global process
@@ -213,7 +231,7 @@ def transformPoints_p1(case): return case.transformPoints()
 class Case_p2:
     def __init__(self, name):
         try:
-            super.__init__(name)
+            super().__init__(name)
             self.velocity = float(self.name[:-3])
             if self.velocity:
                 casesproc_p2.append(self)
@@ -221,34 +239,37 @@ class Case_p2:
             cases_p2.append(self)
             cases_p2.sort(key = lambda case:case.velocity)
         except: pass
+
     def delete(self, folder, file=None):
-        try:source = os.path.join(cases_root_p2, self.name, folder,)
-        except TypeError: 
-            if file!=None:source = os.path.join(cases_root_p2,self.name)
-        if file ==None:
-            shutil.rmtree(source)
-            print(f"Deleted {source}")
-        elif os.path.exists(os.path.join(source, file)):
-            os.remove(os.path.join(source, file))
-            print(f"Deleted {os.path.join(source, file)}")
+        base=os.path.join('p2',self.name)
+        if folder is None and file:
+            os.remove(os.path.join(base,file))
+            print(f'Deleted {os.path.join(base,file)}')
+        elif folder and file is None:
+            shutil.rmtree(os.path.join(base,folder))
+            print(f'Deleted {os.path.join(base,folder)}')
+        elif folder and file:
+            os.remove(os.path.join(base,folder,file))
+            print(f'Deleted {os.path.join(base,folder,file)}')
         
 
-    def update(self, rawfolder, file=None):
-        folder = str(rawfolder)
-        try: target = os.path.join(cases_root_p2, "CaseTemplate", folder); source = os.path.join(cases_root_p2, self.name, folder)
-        except TypeError: 
-            if file!=None:target = os.path.join(cases_root_p2, "CaseTemplate"); source = os.path.join(cases_root_p2, self.name)
-        if file==None and os.path.exists(target):
-            shutil.copytree(target, source, dirs_exist_ok=True)
-            print(f"Updated {source}")
-        elif os.path.exists(os.path.join(target, file)):
-            shutil.copy2(os.path.join(target, file), os.path.join(source, file) )
-            print(f"Updated {os.path.join(source, file)}")
+    def update(self, folder, file=None):
+        base=os.path.join('p2',self.name)
+        source=os.path.join('p2','Casetemplate')
+        if folder is None and file:
+            shutil.copy2(os.path.join(source,file),os.path.join(base,file))
+            print(f'Updated {os.path.join(base,file)}')
+        elif folder and file is None:
+            shutil.copytree(os.path.join(source,folder),os.path.join(base,folder),dirs_exist_ok=True)
+            print(f'Updated {os.path.join(base,folder)}')
+        elif folder and file:
+            shutil.copy2(os.path.join(source,folder,file),os.path.join(base,folder,file))
+            print(f'Updated {os.path.join(base,folder,file)}')
         
     def changeU(self):
-        with open(os.path.join(cases_root_p2,self.name,"0","U"), "r") as f:
+        with open(os.path.join('p2',self.name,"0","U"), "r") as f:
             lines = f.readlines()
-        with open(os.path.join(cases_root_p2,self.name,"0","U"), "w") as f:
+        with open(os.path.join('p2',self.name,"0","U"), "w") as f:
             for line in lines:
                 if "internalField   uniform (0 60 0);" in line:
                     f.write(f"internalField   uniform (0 {self.velocity} 0);\n")
@@ -260,12 +281,12 @@ class Case_p2:
         timelines = []
         drag_list = []
         lift_list = []
-        dat = os.path.join(cases_root_p2, self.name, "postProcessing", "Forces", "0", "forces.dat")
+        dat = os.path.join('p2', self.name, "postProcessing", "Forces", "0", "forces.dat")
         with open(dat, "r")as f:
             for line in f:
                 if line.startswith("#") or line.strip() =="":
                     continue
-                timeline = float(line[:4].strip())
+                timeline = float(line[:10].strip())
                 if timeline<1:continue
                 vectors = re.findall(r"\(([^()]+)\)", line)
                 f_a = vectors[0].strip().split()
@@ -324,12 +345,10 @@ class Case_p2:
         lift_list.clear()
         drag_list.clear()
         plt.close()
-    int("[오류 발생: foamRun] 이 프로세스는 v11 이상의 OpenFOAM 환경에서 진행해야 합니다.")
 
 #2번 파라메트릭 스윕 전용 함수들
 def postProcessing_p2():
-    global results
-    results.clear()
+    r_clear()
     folders = sorted(cases_p2, key = lambda f:f.velocity )
     for case in folders: case.forces()
     df = pd.DataFrame(results)
@@ -355,7 +374,18 @@ def postProcessing_p2():
 
 def launch_p2(): 
     cases_p2.clear()
-    for case in os.listdir(cases_root_p2): case = Case(case)
+    for case in os.listdir('p2'): case = Case(case)
+
+def update_p2():
+    folder=input('Enter your FOLDER name: ')
+    file=input('Enter your FILE name: ')
+    for case in cases_p2:
+        case.update(folder,file)
+def delete_p2():
+    folder=input('Enter your FOLDER name: ')
+    file=input('Enter your FILE name: ')
+    for case in cases_p2:
+        case.delete(folder,file)
 
 def foamRun_p2():
     global process
@@ -388,12 +418,12 @@ def forces_check():
     timelines = []
     drag_list = []
     lift_list = []
-    dat = os.path.join(cases_root_check, "50deg", "postProcessing", "Forces", "0", "forces.dat")
+    dat = os.path.join('check', "50deg", "postProcessing", "Forces", "0", "forces.dat")
     with open(dat, "r")as f:
         for line in f:
             if line.startswith("#") or line.strip() =="":
                 continue
-            timeline = float(line[:4].strip())
+            timeline = float(line[:10].strip())
             if timeline<1.3:continue
             vectors = re.findall(r"\(([^()]+)\)", line)
             f_a = vectors[0].strip().split()
@@ -447,27 +477,29 @@ def forces_check():
     plt.close()
 
 def decompose_check(num):
-    with open (os.path.join(cases_root_check,'50deg',"system","decomposeParDict"), "r") as f:
+    with open (os.path.join('check','50deg',"system","decomposeParDict"), "r") as f:
         lines = f.readlines()
-    with open (os.path.join(cases_root_check,'50deg',"system","decomposeParDict"), "w") as f:
+    with open (os.path.join('check','50deg',"system","decomposeParDict"), "w") as f:
         for line in lines:
             if "numberOfSubdomains" in line:
                 f.write(f"numberOfSubdomains  {num};\n")
             else:f.write(line)
     try: 
-        subprocess.run(["decomposePar"], cwd = os.path.join(cases_root_check, '50deg'))
+        subprocess.run(["decomposePar"], cwd = os.path.join('check', '50deg'))
     except: print("[오류 발생: foamRun] 이 프로세스는 v11 이상의 OpenFOAM 환경에서 진행해야 합니다.")
-    subprocess.Popen(["mpirun","-np",str(num),"foamRun","-parallel"], cwd = os.path.join(cases_root_check,'50deg'))
+    subprocess.Popen(["mpirun","-np",str(num),"foamRun","-parallel"], cwd = os.path.join('check','50deg'))
 
 def foamRun_check():
     try: 
-        p = subprocess.Popen(["foamRun"], cwd = os.path.join(cases_root_check, '50deg'))
+        p = subprocess.Popen(["foamRun"], cwd = os.path.join('check', '50deg'))
         return p
     except: print("[오류 발생: foamRun] 이 프로세스는 v11 이상의 OpenFOAM 환경에서 진행해야 합니다.")
 
 def transformPoints_check():
     try:
         command = f"transformPoints 'Rx={50}' "
-        p = subprocess.Popen(command, cwd = os.path.join(cases_root_check, '50deg'), shell=True)
+        p = subprocess.Popen(command, cwd = os.path.join('check', '50deg'), shell=True)
         return p
     except: print("[오류 발생: foamRun] 이 프로세스는 v11 이상의 OpenFOAM 환경에서 진행해야 합니다.")
+launch_p1()
+launch_p2()

@@ -11,7 +11,7 @@ solver                  incompressibleFluid;
 startFrom               startTime;
 startTime               0;
 endTime                 5;
-deltaT                  0.05;
+deltaT                  0.005;
 writeControl            timeStep;
 writeInterval           500000;
 purgeWrite              0;
