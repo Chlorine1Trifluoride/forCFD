@@ -13,7 +13,7 @@ startTime               0;
 endTime                 5;
 deltaT                  0.005;
 writeControl            timeStep;
-writeInterval           500000;
+writeInterval           500000; //주석이지만 작동에 꼭 필요한 주석이니 지우지 마세요
 purgeWrite              0;
 writeFormat             ascii;
 writePrecision          6;

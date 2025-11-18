@@ -14,6 +14,18 @@
 
 <br><br>
 
+## 포함된 프로그램
+
+
+| 프로그램명 | 한줄 설명 |
+| - | - |
+| [blueCFD-Core 2024](https://github.com/blueCFD/Core/releases/download/blueCFD-Core-2024-1/blueCFD-Core-2024-1-win64-setup.exe) | Windows용 OpenFOAM(<span title='Computational Fluid Dynamics, 전산유체역학'>CFD 소프트웨어</span>) |
+| [Python 3.14.0](https://www.python.org/ftp/python/3.14.0/python-3.14.0-amd64.exe)                                              | 스크립트 작동에 필수적인 프로그래밍 언어 |
+| [Visual Studio Code](https://code.visualstudio.com/sha/download?build=stable&os=win32-x64-user)                                | 코드 편집기 |
+| [Git for Windows](https://github.com/git-for-windows/git/releases/download/v2.51.2.windows.1/Git-2.51.2-64-bit.exe)            | 버전 관리 프로그램 |
+
+<br><br>
+
 ## 사용 가이드 목차
 
 1. [프로그램 세팅](#1-프로그램-세팅)
@@ -41,25 +53,21 @@
 
 <br>
 
-아래의 링크들을 클릭하여 프로그램들을 설치합니다.
 
-Python 설치 프로그램 실행 시 모든 체크박스에 체크하여야 합니다!!!
-
-| 프로그램명 | 한줄 설명 |
-| - | - |
-| [blueCFD-Core 2024](https://github.com/blueCFD/Core/releases/download/blueCFD-Core-2024-1/blueCFD-Core-2024-1-win64-setup.exe) | Windows용 OpenFOAM(<span title='Computational Fluid Dynamics, 전산유체역학'>CFD 소프트웨어</span>) |
-| [Python 3.14.0](https://www.python.org/ftp/python/3.14.0/python-3.14.0-amd64.exe)                                              | 스크립트 작동에 필수적인 프로그래밍 언어 |
-| [Visual Studio Code](https://code.visualstudio.com/sha/download?build=stable&os=win32-x64-user)                                | 코드 편집기 |
-| [Git for Windows](https://github.com/git-for-windows/git/releases/download/v2.51.2.windows.1/Git-2.51.2-64-bit.exe)            | 버전 관리 프로그램 |
 
 <br>
 
-앞의 모든 다운로드 과정을 마친 후 아래의 명령어를 터미널에 입력합니다.
+아래의 명령어를 터미널에 입력합니다.
 
 ``` Powershell or CMD
-Invoke-WebRequest -Uri (TODO:raw 링크 가져올것:SetUp/Windows/PATH.py) -OutFile PATH.py
-python PATH.py
+
+Invoke-WebRequest -Uri 'https://github.com/s2510423/2025-2-CFD/archive/refs/tags/v1.0.zip' -OutFile (TODO:파일명 정확히: .zip)
+
 ```
+
+<br>
+
+레포지토리 내 다음 위치의 파일을 실행합니다: ```SetUp\Windows\CFD.bat```
 
 <br>
 
@@ -72,11 +80,16 @@ python PATH.py
 아래의 명령어를 터미널에 입력합니다.
 
 ``` bash
-wget (TODO:raw 링크 가져올것)
-bash CFD.sh
+
+wget 'https://github.com/s2510423/2025-2-CFD/archive/refs/tags/v1.0.zip'
+
 ```
 
 포함된 프로그램은 Windows 항목과 동일합니다.
+
+<br>
+
+레포지토리 내 다음 위치의 파일을 실행합니다: ```SetUp\Linux\CFD.sh```
 
 <br><br><br><br><br>
 
@@ -102,9 +115,19 @@ python start.py
 
 ```
 
-실행 직후 'p1','p2','check' 등의 정체를 알 수 없는 폴더들이 생성될 것입니다. 이것들은 각각 학술제 연구 보고서에 명시된 것과 같은 시뮬레이션 절차를 위한 케이스 디렉토리들입니다. p1은 **P**arametric sweep **1**(1차 파라메트릭 스윕), p2는 2차를 의미하며, 'check'는 1차 파라메트릭 스윕 결과 검증 시뮬레이션 디렉토리입니다.
+실행 직후 'p1','p2','check' 등의 폴더들이 생성될 것입니다. 이것들은 각각 학술제 연구 보고서에 명시된 것과 같은 시뮬레이션 절차를 위한 케이스 디렉토리들입니다. p1은 **P**arametric sweep **1**(1차 파라메트릭 스윕), p2는 2차를 의미하며, 'check'는 1차 파라메트릭 스윕 결과 검증 시뮬레이션 디렉토리입니다.
 
-이 'start.py' 스크립트는 저의 파일 정보와 스크립트들을 작성하는 스크립트로, 이를 통해 여러개의 스크립트와 3D 모델의 용량 크기로 인한 디스크 사용 공간을 절약하는 일종의 압축 효과를 얻을 수 있으며, 초기 파일 수를 줄여 사용 편의성을 증대하였습니다.
+이 'start.py' 스크립트는 시뮬레이션 환경을 구축하는 셋업 스크립트로, 이를 통해 여러개의 스크립트와 3D 모델의 용량 크기로 인한 디스크 사용 공간을 절약하는 일종의 압축 효과를 얻을 수 있으며, 초기 파일 수를 줄여 사용 편의성을 증대하였습니다.
+
+#### 3. 다음의 명령어로 중앙 제어 스크립트를 실행합니다.
+
+```terminal
+
+python main.py
+
+```
+
+출력되는 메뉴의 입력창에 원하는 작업 또는 디렉토리의 번호를 입력합니다.
 
 <br><br><br><br><br>
 
@@ -112,17 +135,15 @@ python start.py
 
 <br>
 
-#### 1. 터미널을 이용하여 ```p1```,```p2``` 중 하나의 폴더에 접근합니다.
+#### Update
 
-단, ```check```는 단일 케이스 구조이기 때문에 별도의 파일 관리 시스템을 구축하지 않았습니다.
+이 스크립트의 파일 관리 시스템에서 ```update``` 기능은 기본적으로 ```CaseTemplate```디렉토리의 파일들을 기준으로 합니다. 원하는 파일 또는 폴더를 ```CaseTemplate```에 복사한 후 이 ```update``` 기능을 실행하면 모든 케이스 폴더들로 자동 복사/덮어쓰기 됩니다. 케이스의 루트 디렉토리에 있는 파일을 업데이트할 경우 file name을 입력하지 않으며, 케이스의 루트 디렉토리에 있는 폴더를 업데이트할 경우 file을 입력하지 않으면 됩니다.
 
-#### 2. ```python auto.py``` 또는 ```python3 auto.py``` 명령어를 이용하여 ```auto.py``` 스크립트를 실행합니다.
-
-```auto.py``` 입력창에 원하는 작업의 번호를 입력하셔야 정상 작동됩니다.
-
-스크립트를 실행할 시 작업 선택 매뉴가 출력됩니다. 이 스크립트의 파일 관리 시스템에서 ```update``` 기능은 기본적으로 ```CaseTemplate```디렉토리의 파일들을 기준으로 합니다. 원하는 파일 또는 폴더를 ```CaseTemplate```에 복사한 후 이 ```update``` 기능을 실행하면 모든 케이스 폴더들로 자동 복사/덮어쓰기 됩니다.
+#### Delete
 
 ```delete``` 기능 또한 ```update```와 같은 방식이되, ```CaseTemplate```에 없는 항목이라도 각각의 케이스 디렉토리에서 발견되는 입력 항목들을 모두 제거합니다. 
+
+#### Initialize
 
 ```Initialize``` 기능은 각 케이스 폴더의 내용을 모두 초기화하는 기능입니다. ```Ctrl```+```z``` 단축키로 실행 취소 가능한지 확인되지 않았습니다. 신중히 사용하시기 바랍니다.
 

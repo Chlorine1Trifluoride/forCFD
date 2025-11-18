@@ -11,7 +11,14 @@ def p1():
         i.update('system')
         i.update('constant')
         i.update(None,'.foam')
-
+        i.delete(os.path.join('constant','trisurface'),'HumanHQ0deg.stl')
+        with open(os.path.join(root,i,'system','controlDict'), "r") as f:
+            lines = f.readlines()
+        with open(os.path.join(root,i,'system','controlDict'), "w") as f:
+            for line in lines:
+                        if 'writeIntervlal' in line and '//' in line:
+                            f.write("writeInterval            1000;\n")
+                        else:pass
         
 def p2():
     root = os.path.join("..", "p2")
@@ -24,12 +31,29 @@ def p2():
         i.update('constant')
         i.update(None,'.foam')
         i.changeU()
+        i.delete(os.path.join('constant','trisurface'),'HumanHQ0deg.stl')
         with open(os.path.join(root,i,'system','controlDict'), "r") as f:
             lines = f.readlines()
         with open(os.path.join(root,i,'system','controlDict'), "w") as f:
             for line in lines:
                 if "deltaT" in line:
                     f.write(f"deltaT                  0.05;\n")
+                elif 'writeIntervlal' in line and '//' in line:
+                    f.write("writeInterval            100;\n")
+                else:pass
 
-def check(): shutil.copytree(os.path.join('..','CaseTemplate'), '50deg',dirs_exist_ok=True)
+def check(): 
+    shutil.copytree(os.path.join('..','CaseTemplate'), '50deg',dirs_exist_ok=True)
+    os.remove(os.path.join('50deg0','constant','trisurface','HumanHQ0deg.stl'))
+    with open(os.path.join(root,'50deg','system','controlDict'), "r") as f:
+        lines = f.readlines()
+    with open(os.path.join(root,'50deg','system','controlDict'), "w") as f:
+        for line in lines:
+            if "deltaT" in line:
+                f.write(f"deltaT                  0.01;\n")
+            elif 'endTime' in line:
+                f.write(f'endtime                 50;\n')
+            elif 'writeIntervlal' in line and '//' in line:
+                f.write("writeInterval            5000;\n")
+            else:pass
 
